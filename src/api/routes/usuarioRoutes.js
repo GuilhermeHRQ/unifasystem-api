@@ -2,8 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/usuario-controller');
+const api = require('../../core/usuario/usuarioController');
 
-router.post('/inserir', controller.inserir);
+router.post('/inserir', api.inserir);
 
 module.exports = router;

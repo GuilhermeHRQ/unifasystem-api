@@ -18,6 +18,12 @@ const schema = new Schema({
     senha: {
         type: String,
         required: [true, 'Senha é obrigatória']
+    },
+    cor: {
+        type: String,
+        required: false,
+        trim: true,
+        default: null
     }
 })
 
