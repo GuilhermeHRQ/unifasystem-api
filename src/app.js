@@ -15,6 +15,8 @@ const Usuario = require('./models/usuario');
 
 // Carregar as rotas
 const indexRoutes = require('./routes/index-routes');
+const usuarioRoutes = require('./routes/usuario-routes');
+const loginRoutes = require('./routes/login-routes');
 
 app.use(bodyParser.json({
     limit: '5mb' // define um limite de dados na req
@@ -26,6 +28,7 @@ app.use(cors);
 
 // Cadastrando rotas
 app.use('/', indexRoutes); // Adiciona um prefixo que deve ser colocado antes da rota ex: se o prefixo for /user a rota devera ser {{HOST}}:port/user/rota
-
+app.use('/usuario', usuarioRoutes);
+app.use('/login', loginRoutes);
 
 module.exports = app;
