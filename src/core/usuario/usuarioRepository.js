@@ -22,20 +22,20 @@ async function selecionar() {
     return data;
 }
 
-async function selecionarPorId(id) {
-    const data = await Usuario.findById(id);
+async function selecionarPorId(params) {
+    const data = await Usuario.findById(params.id);
     return data;
 }
 
-async function atualizar(id, data) {
-    await Usuario.findByIdAndUpdate(id, {
+async function atualizar(params) {
+    await Usuario.findByIdAndUpdate(params.id, {
         $set: {
-            nome: data.name,
-            email: data.email
+            nome: params.nome,
+            email: params.email,
         }
     });
 }
 
-async function remover(id) {
-    await Usuario.findByIdAndRemove(id);
+async function remover(params) {
+    return await Usuario.findByIdAndRemove(params.id);
 }
