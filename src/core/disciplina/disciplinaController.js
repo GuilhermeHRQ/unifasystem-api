@@ -2,7 +2,8 @@ const scope = require('./disciplinaScope');
 const service = require('./disciplinaService');
 
 module.exports = {
-    inserir
+    inserir,
+    selecionar
 }
 
 async function inserir(req, res) {
@@ -10,7 +11,7 @@ async function inserir(req, res) {
         cargaHoraria: req.body.cargaHoraria,
         nome: req.body.nome,
         descricao: req.body.descricao,
-        token: req.headers.authorization
+        token: req.headers.authentication
     }
 
     try {
@@ -36,12 +37,41 @@ async function inserir(req, res) {
         }
 
         return res.finish({
-            httpCode: 200,
+            httpCode: httpCode,
             error: error,
-            content: data
+            content: content
         });
+
     } catch (error) {
         res.finish({
+            httpCode: error.httpCode || 500,
+            error
+        });
+    }
+}
+
+async function selecionar(req, res) {
+    const params = {
+        filtro: req.query.filtro || null,
+        pagina: req.query.pagina || 1,
+        linhas: req.query.linhas || 10
+    }
+
+    try {
+        await scope.selecionar(params);
+
+        const data = await service.selecionar(params);
+
+        const totalLinhas = data && data.content ? data.content.length : 0;
+
+        return res.finish({
+            httpCode: 200,
+            content: data.content,
+            totalLinhas: totalLinhas
+        });
+
+    } catch (error) {
+        return res.finish({
             httpCode: error.httpCode || 500,
             error
         });

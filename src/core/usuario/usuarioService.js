@@ -20,7 +20,6 @@ async function inserir(params) {
     }
 
     return {
-        executionCode: 0,
         content: data
     }
 }
@@ -29,7 +28,6 @@ async function selecionar() {
     const data = await repository.selecionar();
 
     return {
-        executionCode: 0,
         content: data
     }
 }
@@ -39,13 +37,11 @@ async function selecionarPorId(params) {
 
     if (!data) {
         return {
-            executionCode: 1,
             message: 'Usuário não encontrado'
         }
     }
 
     return {
-        executionCode: 0,
         content: data
     }
 }
@@ -58,7 +54,6 @@ async function remover(params) {
     const data = await repository.remover(params);
 
     return {
-        executionCode: 0,
         content: data
     }
 }

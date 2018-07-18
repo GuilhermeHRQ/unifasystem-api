@@ -1,7 +1,8 @@
 const validate = require('../../helpers/validate');
 
 module.exports = {
-    inserir
+    inserir,
+    selecionar
 }
 
 async function inserir(params) {
@@ -27,6 +28,32 @@ async function inserir(params) {
             string: true
         }
     };
+
+    try {
+        await validate(params, validation);
+    } catch (error) {
+        error.httpCode = 400;
+        throw error;
+    }
+}
+
+async function selecionar(params) {
+    const validation = {
+        filtro: {
+            string: true,
+            maxLength: 70
+        },
+        pagina: {
+            required: true,
+            number: 'smallint',
+            notNull: true
+        },
+        linhas: {
+            required: true,
+            number: 'smallint',
+            notNull: true
+        }
+    }
 
     try {
         await validate(params, validation);

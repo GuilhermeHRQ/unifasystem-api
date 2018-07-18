@@ -34,7 +34,7 @@ async function decodeToken(token) {
  * @param {Function} next Prossegue para a próxima chamada 
  */
 function authorize(req, res, next) {
-    const token = req.body.token || req.query.token || req.headers['x-access-token'] || req.headers['authorization']; // Verifica o token nesses pontos
+    const token = req.body.token || req.query.token || req.headers['x-access-token'] || req.headers['authentication']; // Verifica o token nesses pontos
 
     if (!token) {
         res.status(401).json({
@@ -55,7 +55,7 @@ function authorize(req, res, next) {
 
 // Verifica se o user é um admin para ter acesso a alguns métodos expecíficos
 function isAdmin(req, res, next) {
-    const token = req.body.token || req.query.token || req.headers['x-access-token'] || req.headers['authorization']; // Verifica o token nesses pontos
+    const token = req.body.token || req.query.token || req.headers['x-access-token'] || req.headers['authentication']; // Verifica o token nesses pontos
 
     if (!token) {
         res.status(401).json({

@@ -2,7 +2,8 @@ const repository = require('./disciplinaRepository');
 const auth = require('../../helpers/auth');
 
 module.exports = {
-    inserir
+    inserir,
+    selecionar
 }
 
 async function inserir(params) {
@@ -35,5 +36,15 @@ async function inserir(params) {
         content: {
             id: data
         }
+    }
+}
+
+async function selecionar(params) {
+    params.filtro = params.filtro || '.';
+
+    const data = await repository.selecionar(params);
+
+    return {
+        content: data || []
     }
 }

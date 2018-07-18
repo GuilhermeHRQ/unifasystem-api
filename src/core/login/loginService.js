@@ -1,6 +1,7 @@
 const repository = require('./loginRepository');
 const md5 = require('md5');
 const auth = require('../../helpers/auth');
+const routes = require('../../api/routes/routes');
 
 module.exports = {
     getDadosUsuario,
@@ -19,7 +20,6 @@ async function getDadosUsuario(params) {
     }
 
     return {
-        executionCode: 0,
         content: {
             user: data
         }
@@ -52,12 +52,11 @@ async function logar(params) {
 
 
     return {
-        executionCode: 0,
         content: {
             user: data,
             opcoes: menu,
             token: token,
-            api: {}
+            api: routes || {}
         }
     }
 }
@@ -81,12 +80,11 @@ async function refazLogin(params) {
     });
 
     return {
-        executionCode: 0,
         content: {
             user: data,
             opcoes: menu,
             token: token,
-            api: {}
+            api: routes || {}
         }
     }
 }
