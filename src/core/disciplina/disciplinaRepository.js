@@ -1,14 +1,12 @@
-'use strict';
+const mongoose = require('mongoose');
+const Disciplina = mongoose.model('Disciplina');
 
 module.exports = {
     inserir
 }
 
-const mongoose = require('mongoose');
-const Disciplina = mongoose.model('Disciplina');
-
-async function inserir(body) {
-    const disciplina = new Disciplina(body);
+async function inserir(params) {
+    const disciplina = new Disciplina(params);
     await disciplina.save();
     return disciplina.id;
 }

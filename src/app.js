@@ -20,6 +20,7 @@ const Disciplina = require('./models/disciplina');
 const indexRoutes = require('./api/routes/indexRoutes');
 const usuarioRoutes = require('./api/routes/usuarioRoutes');
 const loginRoutes = require('./api/routes/loginRoutes');
+const disciplinaRoutes = require('./api/routes/disciplinaRoutes');
 
 app.use(bodyParser.json({
     limit: '5mb' // define um limite de dados na req
@@ -34,5 +35,6 @@ app.use(response);
 app.use('/', indexRoutes); // Adiciona um prefixo que deve ser colocado antes da rota ex: se o prefixo for /user a rota devera ser {{HOST}}:port/user/rota
 app.use('/usuario', usuarioRoutes);
 app.use('/login', loginRoutes);
+app.use('/disciplina', disciplinaRoutes);
 
 module.exports = app;

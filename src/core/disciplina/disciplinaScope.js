@@ -1,5 +1,9 @@
 const validate = require('../../helpers/validate');
 
+module.exports = {
+    inserir
+}
+
 async function inserir(params) {
     const validation = {
         cargaHoraria: {
@@ -16,6 +20,11 @@ async function inserir(params) {
             required: true,
             string: true,
             maxLength: 200
+        },
+        token: {
+            required: true,
+            notNull: true,
+            string: true
         }
     };
 
