@@ -3,7 +3,8 @@ const Disciplina = mongoose.model('Disciplina');
 
 module.exports = {
     inserir,
-    selecionar
+    selecionar,
+    selecionarPorId
 }
 
 async function inserir(params) {
@@ -20,4 +21,11 @@ async function selecionar(params) {
             .sort({ nome: 1 })
             .limit(params.linhas)
             .skip((params.pagina - 1) * params.linhas);
+}
+
+async function selecionarPorId(params) {
+    return await
+        Disciplina
+            .findById(params.id)
+            .populate('usuario');
 }

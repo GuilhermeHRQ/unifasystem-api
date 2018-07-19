@@ -37,6 +37,7 @@ async function selecionarPorId(params) {
 
     if (!data) {
         return {
+            executionCode: 1,
             message: 'Usuário não encontrado'
         }
     }
@@ -51,9 +52,20 @@ async function atualizar(params) {
 }
 
 async function remover(params) {
-    const data = await repository.remover(params);
+    const data = await repository.selecionarPorId(params);
+
+    if (!data) {
+        return {
+            executionCode: 1,
+            message: 'Usuário não encontrado'
+        }
+    }
+
+    await repository.remover(params);
 
     return {
-        content: data
+        content: {
+            message: 'Usuário removido com sucesso!'
+        }
     }
 }

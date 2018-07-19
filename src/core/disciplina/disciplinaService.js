@@ -48,3 +48,7 @@ async function selecionar(params) {
         content: data || []
     }
 }
+
+async function selecionarPorId(params) {
+    const data = await repository.selecionarPorId(params); 
+}

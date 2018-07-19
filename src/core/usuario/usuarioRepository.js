@@ -37,5 +37,5 @@ async function atualizar(params) {
 }
 
 async function remover(params) {
-    return await Usuario.findByIdAndRemove(params.id);
+    await Usuario.findByIdAndRemove(params.id);
 }

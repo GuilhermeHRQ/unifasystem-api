@@ -144,16 +144,26 @@ async function remover(req, res) {
 
         const data = await service.remover(params);
 
-        return res.finish({
-            httpCode: 200,
-            content: 'Removido com sucesso'
-        });
-    } catch (error) {
-        if (error.name === 'CastError') {
-            error.httpCode = 404;
-            error.message = 'Usuário não encontrado';
+        let httpCode = 200;
+        let error;
+        let content;
+
+        switch (data.executionCode) {
+            case 1:
+                httpCode = 404;
+                error = data;
+                break;
+            default:
+                content = data.content
         }
 
+        return res.finish({
+            httpCode: httpCode,
+            error: error,
+            content: content
+        });
+
+    } catch (error) {
         return res.finish({
             httpCode: error.httpCode || 500,
             error
