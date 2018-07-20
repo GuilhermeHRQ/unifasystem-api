@@ -2,7 +2,8 @@ const validate = require('../../helpers/validate');
 
 module.exports = {
     inserir,
-    selecionar
+    selecionar,
+    atualizar: inserir
 }
 
 async function inserir(params) {
@@ -22,10 +23,9 @@ async function inserir(params) {
             string: true,
             maxLength: 200
         },
-        token: {
+        user: {
             required: true,
             notNull: true,
-            string: true
         }
     };
 

@@ -7,6 +7,6 @@ const auth = require('../../helpers/auth');
 
 router.post('/', api.logar);
 router.post('/dados', api.getDadosUsuario);
-router.get('/refazer', auth.authorize, api.refazLogin);
+router.get('/refazer', auth.verify(api.refazLogin));
 
 module.exports = router;

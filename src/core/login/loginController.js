@@ -90,7 +90,7 @@ async function logar(req, res) {
 
 async function refazLogin(req, res) {
     const params = {
-        token: req.headers.authentication
+        user: req.token
     };
 
     try {

@@ -4,7 +4,9 @@ const Disciplina = mongoose.model('Disciplina');
 module.exports = {
     inserir,
     selecionar,
-    selecionarPorId
+    selecionarPorId,
+    atualizar,
+    remover
 }
 
 async function inserir(params) {
@@ -27,5 +29,26 @@ async function selecionarPorId(params) {
     return await
         Disciplina
             .findById(params.id)
-            .populate('usuario');
+            .populate('usuarioCadastro', 'nome')
+            .populate('usuarioAlteracao', 'nome');
+}
+
+async function atualizar(params) {
+    await
+        Disciplina
+            .findByIdAndUpdate(params.id, {
+                $set: {
+                    cargaHoraria: params.cargaHoraria,
+                    nome: params.nome,
+                    descricao: params.descricao,
+                    dataAlteracao: Date.now(),
+                    usuarioAlteracao: params.user.id
+                }
+            });
+}
+
+async function remover(params) {
+    await
+        Disciplina
+            .findByIdAndRemove(params.id);
 }

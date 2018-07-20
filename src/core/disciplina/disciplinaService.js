@@ -1,33 +1,25 @@
 const repository = require('./disciplinaRepository');
-const auth = require('../../helpers/auth');
 
 module.exports = {
     inserir,
-    selecionar
+    selecionar,
+    selecionarPorId,
+    atualizar
 }
 
 async function inserir(params) {
-    const user = await auth.decodeToken(params.token);
-
-    if (!user) {
-        return {
-            executionCode: 1,
-            message: 'Sessão inválida, usuário logado não encontrado'
-        }
-    }
-
     const body = {
         cargaHoraria: params.cargaHoraria,
         nome: params.nome,
         descricao: params.descricao,
-        usuarioCadastro: user.id
+        usuarioCadastro: params.user.id
     };
 
     const data = await repository.inserir(body);
 
     if (!data) {
         return {
-            executionCode: 2,
+            executionCode: 1,
             message: 'Erro ao cadastrar disciplina'
         }
     }
@@ -50,5 +42,54 @@ async function selecionar(params) {
 }
 
 async function selecionarPorId(params) {
-    const data = await repository.selecionarPorId(params); 
+    const data = await repository.selecionarPorId(params);
+
+    if (!data) {
+        return {
+            executionCode: 1,
+            message: 'Disciplina não encontrada'
+        }
+    }
+
+    return {
+        content: data
+    }
+}
+
+async function atualizar(params) {
+    const data = repository.selecionarPorId(params.id);
+
+    if (!data) {
+        return {
+            executionCode: 1,
+            message: 'Disciplina não encontrada'
+        }
+    }
+
+    await repository.atualizar(params);
+
+    return {
+        content: {
+            message: 'Disciplina alterada com sucesso!'
+        }
+    }
+}
+
+async function remover(params) {
+    const data = repository.selecionarPorId(params.id);
+
+    if (!data) {
+        return {
+            executionCode: 1,
+            message: 'Disciplina não encontrada'
+        }
+    }
+
+    await repository.remover(params);
+
+    return {
+        content: {
+            message: 'Disciplina removida com sucesso!'
+        }
+    }
 }

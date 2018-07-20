@@ -26,7 +26,6 @@ const schema = new Schema({
     dataAlteracao: {
         type: Date,
         required: false,
-        default: null
     },
     usuarioCadastro: {
         type: mongoose.Schema.Types.ObjectId,

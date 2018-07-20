@@ -41,9 +41,9 @@ async function logar(params) {
 
 async function refazLogin(params) {
     const validation = {
-        token: {
+        user: {
             required: true,
-            string: true
+            notNull: true
         }
     };
 

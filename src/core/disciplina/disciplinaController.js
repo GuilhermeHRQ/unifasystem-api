@@ -3,18 +3,21 @@ const service = require('./disciplinaService');
 
 module.exports = {
     inserir,
-    selecionar
+    selecionar,
+    selecionarPorId,
+    atualizar,
+    remover
 }
 
 async function inserir(req, res) {
-    const params = {
-        cargaHoraria: req.body.cargaHoraria,
-        nome: req.body.nome,
-        descricao: req.body.descricao,
-        token: req.headers.authentication
-    }
-
     try {
+        const params = {
+            cargaHoraria: req.body.cargaHoraria,
+            nome: req.body.nome,
+            descricao: req.body.descricao,
+            user: req.token
+        }
+
         await scope.inserir(params);
 
         const data = await service.inserir(params);
@@ -25,10 +28,6 @@ async function inserir(req, res) {
 
         switch (data.executionCode) {
             case 1:
-                httpCode = 401;
-                error = data;
-                break;
-            case 2:
                 httpCode = 400;
                 error = data;
                 break;
@@ -51,13 +50,13 @@ async function inserir(req, res) {
 }
 
 async function selecionar(req, res) {
-    const params = {
-        filtro: req.query.filtro || null,
-        pagina: req.query.pagina || 1,
-        linhas: req.query.linhas || 10
-    }
-
     try {
+        const params = {
+            filtro: req.query.filtro || null,
+            pagina: req.query.pagina || 1,
+            linhas: req.query.linhas || 10
+        }
+
         await scope.selecionar(params);
 
         const data = await service.selecionar(params);
@@ -68,6 +67,118 @@ async function selecionar(req, res) {
             httpCode: 200,
             content: data.content,
             totalLinhas: totalLinhas
+        });
+
+    } catch (error) {
+        return res.finish({
+            httpCode: error.httpCode || 500,
+            error
+        });
+    }
+}
+
+async function selecionarPorId(req, res) {
+    try {
+        const params = {
+            id: req.params.id
+        }
+
+        const data = await service.selecionarPorId(params);
+
+        let httpCode = 200;
+        let error;
+        let content;
+
+        switch (data.executionCode) {
+            case 1:
+                httpCode = 404;
+                error = data;
+                break;
+            default:
+                content = data.content;
+        };
+
+        return res.finish({
+            httpCode: httpCode,
+            error: error,
+            content: content
+        });
+
+    } catch (error) {
+        return res.finish({
+            httpCode: error.httpCode || 500,
+            error
+        });
+    }
+}
+
+async function atualizar(req, res) {
+    try {
+        const params = {
+            id: req.params.id,
+            user: req.token,
+            cargaHoraria: req.body.cargaHoraria,
+            nome: req.body.nome,
+            descricao: req.body.descricao
+        }
+
+        await scope.atualizar(params);
+
+        const data = service.atualizar(params);
+
+        let httpCode = 200;
+        let error;
+        let content;
+
+        switch (data.executionCode) {
+            case 1:
+                httpCode = 404;
+                error = data;
+                break;
+            default:
+                content = data.content;
+        }
+
+        return res.finish({
+            httpCode: httpCode,
+            error: error,
+            content: content
+        });
+
+    } catch (error) {
+        return res.finish({
+            httpCode: error.httpCode || 500,
+            error
+        });
+    }
+}
+
+
+async function remover(req, res) {
+    try {
+        const params = {
+            id: req.params.id
+        }
+
+        const data = await service.remover(params);
+
+        let httpCode = 200;
+        let error;
+        let content;
+
+        switch (data.executionCode) {
+            case 1:
+                httpCode = 404;
+                error = data;
+                break;
+            default:
+                content = data.content;
+        }
+
+        return res.finish({
+            httpCode: httpCode,
+            error: error,
+            content: content
         });
 
     } catch (error) {

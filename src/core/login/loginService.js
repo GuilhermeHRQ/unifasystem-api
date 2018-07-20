@@ -62,8 +62,7 @@ async function logar(params) {
 }
 
 async function refazLogin(params) {
-    const user = await auth.decodeToken(params.token);
-    const data = await repository.autenticarPorId(user.id);
+    const data = await repository.autenticarPorId(params.user.id);
 
     if (!data) {
         return {
