@@ -8,7 +8,7 @@
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
       <secret-storage>master_key</secret-storage>
       <user-name>jfyucfiyvfztpy</user-name>
-      <introspection-schemas>df6vhct6ogge09:administracao,public</introspection-schemas>
+      <introspection-schemas>df6vhct6ogge09:administracao,public,seguranca</introspection-schemas>
     </data-source>
   </component>
 </project>
