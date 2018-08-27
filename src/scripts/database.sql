@@ -1,4 +1,4 @@
-CREATE SCHEMA administracao;
+-- CREATE SCHEMA administracao;
 
 -- DROP TABLE administracao.disciplina;
 CREATE TABLE administracao.disciplina (
@@ -19,9 +19,9 @@ CREATE TABLE administracao.curso (
     valor         NUMERIC(10, 2)       CONSTRAINT nn_curso_valor NOT NULL,
     ativo         BOOLEAN DEFAULT TRUE CONSTRAINT nn_curso_ativo NOT NULL,
     CONSTRAINT pk_curso_id PRIMARY KEY (id),
-    CONSTRAINT fk_curso_professor_id_coordenador FOREIGN KEY (id_coordenador)
+    CONSTRAINT fk_curso_professor_id_coordenador FOREIGN KEY (idcoordenador)
     REFERENCES administracao.professor (id),
-    CONSTRAINT uq_curso_id_coordenador UNIQUE (id_coordenador)
+    CONSTRAINT uq_curso_id_coordenador UNIQUE (idcoordenador)
 );
 
 -- DROP TABLE administracao.professor;
@@ -70,6 +70,53 @@ CREATE TABLE administracao.aluno (
     CONSTRAINT fk_aluno_usuarioacesso_idusuarioacesso FOREIGN KEY (idusuarioacesso) REFERENCES seguranca.usuarioacesso (id)
 );
 
+-- DROP TABLE administracao.turma;
+CREATE TABLE administracao.turma (
+    id          SERIAL,
+    numero      VARCHAR(30)          CONSTRAINT nn_turma_numero NOT NULL,
+    idcurso     INTEGER              CONSTRAINT nn_turma_idcurso NOT NULL,
+    datainicio  DATE                 CONSTRAINT nn_turma_datainicio NOT NULL,
+    datatermino DATE                 CONSTRAINT nn_turma_termino NOT NULL,
+    idturno     INTEGER              CONSTRAINT nn_turma_idturno NOT NULL,
+    ativo       BOOLEAN DEFAULT TRUE CONSTRAINT nn_turma_ativo NOT NULL,
+    CONSTRAINT pk_turma_id PRIMARY KEY (id),
+    CONSTRAINT fk_turma_curso_idcurso FOREIGN KEY (idcurso) REFERENCES administracao.curso (id),
+    CONSTRAINT fk_turma_turno_idturno FOREIGN KEY (idturno) REFERENCES administracao.turno (id)
+);
+
+-- DROP TABLE administracao.professordisciplinaturma;
+CREATE TABLE administracao.professordisciplinaturma (
+    idprofessor  INTEGER CONSTRAINT nn_professordisciplinaturma_idprofessor NOT NULL,
+    iddisciplina INTEGER CONSTRAINT nn_professordisciplinaturma_iddisciplina NOT NULL,
+    idturma      INTEGER CONSTRAINT nn_professordisciplinaturma_idturma NOT NULL,
+    semestre     INTEGER CONSTRAINT nn_professordisciplinaturma_semestre NOT NULL,
+    CONSTRAINT pk_professordisciplinaturma PRIMARY KEY (idprofessor, iddisciplina, idturma),
+    CONSTRAINT fk_professordisciplinaturma_professor_idprofessor FOREIGN KEY (idprofessor) REFERENCES administracao.professor (id),
+    CONSTRAINT fk_professordisciplinaturma_disciplina_iddisciplina FOREIGN KEY (iddisciplina) REFERENCES administracao.disciplina (id),
+    CONSTRAINT fk_professordisciplinaturma_turma_idturma FOREIGN KEY (idturma) REFERENCES administracao.turma (id)
+);
+
+-- DROP TABLE administracao.alunoturma;
+CREATE TABLE administracao.alunoturma (
+    idturma       INTEGER              CONSTRAINT nn_alunoturma_idturma NOT NULL,
+    idaluno       INTEGER              CONSTRAINT nn_alunoturma_idaluno NOT NULL,
+    dataingresso  DATE                 CONSTRAINT nn_alunoturma_dataingresso NOT NULL,
+    dataconclusao DATE,
+    ativo         BOOLEAN DEFAULT TRUE CONSTRAINT nn_alunoturma_ativo NOT NULL,
+    CONSTRAINT pk_alunoturma PRIMARY KEY (idturma, idaluno),
+    CONSTRAINT fk_alunoturma_turma_idturma FOREIGN KEY (idturma) REFERENCES administracao.turma (id),
+    CONSTRAINT fk_alunoturma_turma_idaluno FOREIGN KEY (idaluno) REFERENCES administracao.aluno (id)
+);
+
+-- DROP TABLE administracao.turno;
+CREATE TABLE administracao.turno (
+    id          SERIAL,
+    nome        VARCHAR(20) CONSTRAINT nn_turno_nome NOT NULL,
+    horainicio  TIME        CONSTRAINT nn_turno_horainicio NOT NULL,
+    horatermino TIME        CONSTRAINT nn_turno_horatermino NOT NULL,
+    CONSTRAINT pk_turno_id PRIMARY KEY (id)
+);
+
 -- DROP TABLE administracao.estado;
 CREATE TABLE administracao.estado (
     sigla CHAR(2),
@@ -89,7 +136,7 @@ CREATE TABLE administracao.cidade (
 -- SEGURANCA
 
 
-CREATE SCHEMA seguranca;
+-- CREATE SCHEMA seguranca;
 
 -- DROP TABLE seguranca.usuarioacesso;
 CREATE TABLE seguranca.usuarioacesso (
