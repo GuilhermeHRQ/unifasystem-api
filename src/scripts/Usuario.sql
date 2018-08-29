@@ -7,7 +7,6 @@ CREATE OR REPLACE FUNCTION seguranca.LoginUsuario(
         "idUsuarioAcesso" INTEGER,
         "idTipoUsuario"   INTEGER,
         "nome"            VARCHAR(50),
-        "email"           VARCHAR(255),
         "logon"           VARCHAR(10),
         "ativo"           BOOLEAN,
         "senhaCorreta"    BOOLEAN
@@ -16,8 +15,8 @@ CREATE OR REPLACE FUNCTION seguranca.LoginUsuario(
 /*
 SELECT *
 FROM seguranca.LoginUsuario(
-        'teste',
-        ''
+        'admin',
+        'teste123'
 );
 */
 
@@ -25,16 +24,14 @@ BEGIN
 
     RETURN QUERY
     SELECT
-        a.id,
+        ua.idusuario,
         ua.id,
         ua.idtipousuario,
-        a.nome,
-        a.email,
+        ua.nome,
         ua.logon,
         ua.ativo,
-        (md5(pSenha) = ua.senha)
+        (ua.senha = md5(pSenha))
     FROM seguranca.usuarioacesso ua
-        INNER JOIN seguranca.administrador a on ua.id = a.idusuarioacesso
     WHERE ua.logon = pLogin;
 END;
 $$
@@ -42,32 +39,28 @@ LANGUAGE PLPGSQL;
 
 
 CREATE OR REPLACE FUNCTION seguranca.RefazLogin(
-    pIdUsuarioAcesso INTEGER,
-    pIdUsuario INTEGER
+    pIdUsuarioAcesso INTEGER
 )
     RETURNS TABLE(
         "idUsuario"       INTEGER,
         "idUsuarioAcesso" INTEGER,
         "idTipoUsuario"   INTEGER,
         "nome"            VARCHAR,
-        "email"           VARCHAR,
         "logon"           VARCHAR
     ) AS $$
 
-SELECT * FROM seguranca.RefazLogin(1);
+-- SELECT * FROM seguranca.RefazLogin(1);
 
 BEGIN
     RETURN QUERY
     SELECT
-        u.id,
+        ua.idusuario,
         ua.id,
         ua.idtipousuario,
-        u.nome,
-        u.email,
+        ua.nome,
         ua.logon
     FROM seguranca.usuarioacesso ua
-        INNER JOIN seguranca.administrador u ON (u.idusuarioacesso = ua.id)
-    WHERE ua.id = pIdUsuarioAcesso AND u.id = pIdUsuario;
+    WHERE ua.id = pIdUsuarioAcesso;
 END;
 $$
 LANGUAGE PLPGSQL;

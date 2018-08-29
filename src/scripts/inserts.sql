@@ -24,3 +24,11 @@ VALUES
     (1, 'Administrador'),
     (2, 'Professor'),
     (3, 'Aluno');
+
+SELECT *
+FROM administracao.turno;
+INSERT INTO administracao.turno (nome, horainicio, horatermino)
+VALUES
+    --     ('Manhã', '08:00', '12:00'),
+    ('Tarde', '12:00', '18:00'),
+    ('Noite', '19:00', '22:30');

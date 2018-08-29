@@ -1,32 +1,28 @@
-'use strict';
+const db = global.db;
 
 module.exports = {
-    autenticar,
-    autenticarPorEmail,
-    autenticarPorId,
-    getMenu
-}
+    preLogin
+};
 
-const mongoose = require('mongoose');
-const Usuario = mongoose.model('Usuario');
-const Menu = mongoose.model('opcoesMenu');
+async function preLogin(params) {
+    let data = db.func('Seguranca.LoginUsuario', [
+        parmas.login,
+        params.senha
+    ]);
 
-async function autenticar(body) {
-    const data = await Usuario.findOne({ email: body.email, senha: body.senha }, 'nome email cor');
-    return data;
-}
+    data = data[0];
 
-async function autenticarPorEmail(params) {
-    const data = await Usuario.findOne({ email: params.login });
-    return data;
-}
+    if(!data) {
+        return {
+            executionCode: 1,
+            message: 'Usuário não encontrado'
+        }
+    } else if(!data.ativo) {
+        return {
+            executionCode: 2,
+            message: 'Usuário bloqueado'
+        }
+    }
 
-async function autenticarPorId(id) {
-    const data = await Usuario.findById(id, 'nome email cor');
-    return data;
-}
-
-async function getMenu() {
-    const data = await Menu.find({});
     return data;
 }
