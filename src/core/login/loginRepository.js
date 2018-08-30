@@ -1,14 +1,18 @@
 const db = global.db;
 
+console.log(db);
+
 module.exports = {
     preLogin
 };
 
 async function preLogin(params) {
-    let data = db.func('Seguranca.LoginUsuario', [
-        parmas.login,
+    let data = await db.func('seguranca.LoginUsuario', [
+        params.login,
         params.senha
     ]);
+
+    console.log(data);
 
     data = data[0];
 
