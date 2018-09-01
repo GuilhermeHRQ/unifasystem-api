@@ -1,35 +1,27 @@
 {
-  "name": "unifasystem-api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "nodemon bin/server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/GuilhermeHRQ/unifasystem-api.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/GuilhermeHRQ/unifasystem-api/issues"
-  },
-  "homepage": "https://github.com/GuilhermeHRQ/unifasystem-api#readme",
-  "dependencies": {
-    "azure-storage": "^2.10.0",
-    "body-parser": "^1.18.3",
-    "debug": "^3.1.0",
-    "express": "^4.16.3",
-    "http": "0.0.0",
-    "jsonwebtoken": "^8.3.0",
-    "md5": "^2.2.1",
-    "mongoose": "^5.2.1",
-    "nodemailer": "^4.6.7",
-    "uuid": "^3.3.2"
-  },
-  "devDependencies": {
-    "nodemon": "^1.17.5"
-  }
+    "name": "unifasystem-api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/GuilhermeHRQ/unifasystem-api.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/GuilhermeHRQ/unifasystem-api/issues"
+    },
+    "homepage": "https://github.com/GuilhermeHRQ/unifasystem-api#readme",
+    "dependencies": {
+        "body-parser": "^1.18.3",
+        "consign": "^0.1.6",
+        "express": "^4.16.3",
+        "jsonwebtoken": "^8.3.0",
+        "pg-promise": "^8.4.6"
+    }
 }

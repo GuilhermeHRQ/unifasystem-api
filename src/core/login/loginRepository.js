@@ -1,32 +1,80 @@
-'use strict';
+const db = global.db;
 
 module.exports = {
-    autenticar,
-    autenticarPorEmail,
-    autenticarPorId,
-    getMenu
-}
+    preLogin,
+    login,
+    refazLogin
+};
 
-const mongoose = require('mongoose');
-const Usuario = mongoose.model('Usuario');
-const Menu = mongoose.model('opcoesMenu');
+async function preLogin(params) {
+    let data = await db.func('Seguranca.LoginUsuario', [
+        params.login,
+        params.senha
+    ]);
 
-async function autenticar(body) {
-    const data = await Usuario.findOne({ email: body.email, senha: body.senha }, 'nome email cor');
+    data = data[0];
+
+    if (!data) {
+        return {
+            executionCode: 1,
+            message: 'Usuário não encontrado'
+        }
+    } else if (!data.ativo) {
+        return {
+            executionCode: 2,
+            message: 'Usuário bloqueado'
+        }
+    }
+
     return data;
 }
 
-async function autenticarPorEmail(params) {
-    const data = await Usuario.findOne({ email: params.login });
+async function login(params) {
+    let data = await db.func('Seguranca.LoginUsuario', [
+        params.login,
+        params.senha
+    ]);
+
+    data = data[0];
+
+    if (!data) {
+        return {
+            executionCode: 1,
+            message: 'Usuário não encontrado'
+        }
+    } else if (!data.senhaCorreta) {
+        return {
+            executionCode: 2,
+            message: 'Senha incorreta!'
+        }
+    } else if (!data.ativo) {
+        return {
+            executionCode: 3,
+            message: 'Usuário bloqueado'
+        }
+    }
+
     return data;
 }
 
-async function autenticarPorId(id) {
-    const data = await Usuario.findById(id, 'nome email cor');
-    return data;
-}
+async function refazLogin(params) {
+    let data = await db.func('Seguranca.RefazLogin', [
+        params.id
+    ]);
 
-async function getMenu() {
-    const data = await Menu.find({});
+    data = data[0];
+
+    if(!data) {
+        return {
+            executionCode: 1,
+            message: 'Usuário não encontrado'
+        }
+    } else if(!data.ativo) {
+        return {
+            executionCode: 2,
+            message: 'Usuário bloqueado'
+        }
+    }
+
     return data;
 }

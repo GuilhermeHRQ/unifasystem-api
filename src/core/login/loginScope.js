@@ -1,56 +1,49 @@
 const validate = require('../../helpers/validate');
 
 module.exports = {
-    getDadosUsuario,
-    logar,
-    refazLogin
-}
+    preLogin,
+    login,
+    rafazLogin
+};
 
-async function getDadosUsuario(params) {
+async function preLogin(params) {
     const validation = {
         login: {
-            required: true
+            required: true,
+            notNull: true,
+            string: true,
+            maxLength: 30
         }
     };
 
-    try {
-        await validate(params, validation);
-    } catch (error) {
-        error.httpCode = 400;
-        throw error;
-    }
+    await validate(params, validation);
 }
 
-async function logar(params) {
+async function login(params) {
     const validation = {
         login: {
-            require: true,
+            required: true,
+            notNull: true,
+            string: true,
+            maxLength: 30
         },
         senha: {
-            required: true
+            required: true,
+            notNull: true,
+            string: true,
         }
     };
 
-    try {
-        await validate(params, validation);
-    } catch (error) {
-        error.httpCode = 400;
-        throw error;
-    }
+    await validate(params, validation);
 }
 
-async function refazLogin(params) {
+async function rafazLogin(params) {
     const validation = {
-        user: {
+        id: {
             required: true,
             notNull: true
         }
     };
 
-    try {
-        await validate(params, validation);
-    } catch (error) {
-        error.httpCode = 400;
-        throw error;
-    }
+    await validate(params, validation);
 }

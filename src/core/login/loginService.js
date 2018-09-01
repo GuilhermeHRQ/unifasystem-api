@@ -1,89 +1,102 @@
 const repository = require('./loginRepository');
-const md5 = require('md5');
-const auth = require('../../helpers/auth');
 const routes = require('../../api/routes/routes');
 
 module.exports = {
-    getDadosUsuario,
-    logar,
+    preLogin,
+    login,
     refazLogin
+};
+
+async function preLogin(params) {
+    const data = await repository.preLogin(params);
+
+    let error;
+
+    switch (data.executionCode) {
+        case 1:
+            error = data;
+            error.httpCode = 404;
+            break;
+        case 2:
+            error = data;
+            error.httpCode = 401
+    }
+
+    if (error) {
+        throw error;
+    }
+
+    delete data.senhaCorreta;
+    delete data.opcoes;
+
+    return data;
 }
 
-async function getDadosUsuario(params) {
-    const data = await repository.autenticarPorEmail(params);
+async function login(params) {
+    const data = await repository.login(params);
 
-    if (!data) {
-        return {
-            executionCode: 1,
-            message: 'Usuário não encontrado'
-        }
+    let error;
+
+    switch (data.executionCode) {
+        case 1:
+            error = data;
+            error.httpCode = 404;
+            break;
+        case 2:
+        case 3:
+            error = data;
+            error.httpCode = 401
     }
 
-    return {
-        content: {
-            user: data
-        }
-    }
-}
-
-async function logar(params) {
-    const data = await repository.autenticarPorEmail(params);
-    const senhaCorreta = data.senha === md5(params.senha, global.SALT_KEY);
-
-    if (!data) {
-        return {
-            executionCode: 1,
-            message: 'Usuário não encontrado'
-        }
-    } else if (!senhaCorreta) {
-        return {
-            executionCode: 2,
-            message: 'Senha incorreta'
-        }
+    if (error) {
+        throw error;
     }
 
-    const menu = await repository.getMenu();
+    delete data.senhaCorreta;
 
-    const token = await auth.generateToken({
-        id: data._id,
-        email: data.email,
-        nome: data.nome
+    const token = await global.generateToken({
+        idUsuario: data.idUsuario,
+        idUsuarioAcesso: data.idUsuarioAcesso,
+        idTipoUsuario: data.idTipoUsuario
     });
 
-
     return {
-        content: {
-            user: data,
-            opcoes: menu,
-            token: token,
-            api: routes || {}
-        }
+        user: data,
+        api: routes,
+        opcao: [],
+        token: token
     }
 }
 
 async function refazLogin(params) {
-    const data = await repository.autenticarPorId(params.user.id);
+    const data = await repository.refazLogin(params);
 
-    if (!data) {
-        return {
-            executionCode: 1,
-            message: 'Usuário não encontrado'
-        }
+    let error;
+
+    switch (data.executionCode) {
+        case 1:
+            error = data;
+            error.httpCode = 404;
+            break;
+        case 2:
+            error = data;
+            error.httpCode = 401;
     }
 
-    const menu = await repository.getMenu();
-    const token = await auth.generateToken({
-        id: data._id,
-        email: data.email,
-        nome: data.nome
+    if (error) {
+        throw error;
+    }
+
+    const token = await global.generateToken({
+        idUsuario: data.idUsuario,
+        idUsuarioAcesso: data.idUsuarioAcesso,
+        idTipoUsuario: data.idTipoUsuario
     });
 
     return {
-        content: {
-            user: data,
-            opcoes: menu,
-            token: token,
-            api: routes || {}
-        }
+        user: data,
+        api: routes,
+        opcao: [],
+        token: token
     }
 }

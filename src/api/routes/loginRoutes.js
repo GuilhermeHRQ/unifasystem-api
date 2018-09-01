@@ -1,12 +1,9 @@
-'use strict';
+const verify = global.verify;
 
-const express = require('express');
-const router = express.Router();
-const api = require('../../core/login/loginController');
-const auth = require('../../helpers/auth');
+module.exports = (app) => {
+    const api = require('../../core/login/loginController');
 
-router.post('/', api.logar);
-router.post('/dados', api.getDadosUsuario);
-router.get('/refazer', auth.verify(api.refazLogin));
-
-module.exports = router;
+    app.route('/login/dados').post(api.preLogin);
+    app.route('/login').post(api.login);
+    app.route('/login/refazer').get(verify(api.refazLogin));
+};

@@ -1,43 +1,28 @@
-'use strict';
+const scope = require('./loginScope');
+const service = require('./loginService');
 
 module.exports = {
-    getDadosUsuario,
-    logar,
+    preLogin,
+    login,
     refazLogin
-}
+};
 
-const service = require('./loginService');
-const scope = require('./loginScope');
-const md5 = require('md5');
-
-async function getDadosUsuario(req, res) {
-    const params = {
-        login: req.body.login
-    }
-
+async function preLogin(req, res) {
     try {
-        await scope.getDadosUsuario(params);
+        const params = {
+            login: req.body.login,
+            senha: null
+        };
 
-        const data = await service.getDadosUsuario(params);
+        await scope.preLogin(params);
 
-        let httpCode = 200;
-        let error;
-        let content;
-
-        switch (data.executionCode) {
-            case 1:
-                httpCode = 404;
-                error = data;
-                break;
-            default:
-                content = data.content;
-        }
+        const data = await service.preLogin(params);
 
         return res.finish({
-            httpCode: httpCode,
-            error: error,
-            content: content
-        });
+            content: {
+                user: data
+            }
+        })
     } catch (error) {
         return res.finish({
             httpCode: error.httpCode || 500,
@@ -46,38 +31,19 @@ async function getDadosUsuario(req, res) {
     }
 }
 
-async function logar(req, res) {
-    const params = {
-        login: req.body.login,
-        senha: req.body.senha
-    }
-
+async function login(req, res) {
     try {
-        await scope.logar(params);
+        const params = {
+            login: req.body.login,
+            senha: req.body.senha
+        };
 
-        const data = await service.logar(params);
+        await scope.login(params);
 
-        let httpCode = 200;
-        let error;
-        let content;
-
-        switch (data.executionCode) {
-            case 1:
-                httpCode = 404;
-                error = data;
-                break;
-            case 2:
-                httpCode = 401;
-                error = data;
-                break;
-            default:
-                content = data.content;
-        }
+        const data = await service.login(params);
 
         return res.finish({
-            httpCode: httpCode,
-            error: error,
-            content: content
+            content: data
         });
 
     } catch (error) {
@@ -89,31 +55,17 @@ async function logar(req, res) {
 }
 
 async function refazLogin(req, res) {
-    const params = {
-        user: req.token
-    };
-
     try {
-        await scope.refazLogin(params);
+        const params = {
+            id: req.token.idUsuarioAcesso
+        };
+
+        await scope.rafazLogin(params);
+
         const data = await service.refazLogin(params);
 
-        let httpCode = 200;
-        let error;
-        let content;
-
-        switch (data.executionCode) {
-            case 1:
-                httpCode = 404;
-                error = data;
-                break;
-            default:
-                content = data.content;
-        }
-
         return res.finish({
-            httpCode: httpCode,
-            error: error,
-            content: content
+            content: data
         });
 
     } catch (error) {

@@ -1,16 +1,11 @@
-const routes = {
-    administracao: {
-        disciplina: {
-            inserir: {
-                method: 'POST',
-                url: `${global.config.host}:${global.config.port}/disciplina`
-            },
-            selecionar: {
+module.exports = {
+    adminisracao: {},
+    seguranca: {
+        login: {
+            refazer: {
                 method: 'GET',
-                url: `${global.config.host}:${global.config.port}/disciplina`
+                url: `${global.config.host}:${global.config.port}/login/refazer`
             }
         }
     }
-}
-
-module.exports = routes;
+};
