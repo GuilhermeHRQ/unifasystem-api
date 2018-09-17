@@ -1,7 +1,5 @@
 const db = global.db;
 
-console.log(db);
-
 module.exports = {
     preLogin
 };
@@ -11,8 +9,6 @@ async function preLogin(params) {
         params.login,
         params.senha
     ]);
-
-    console.log(data);
 
     data = data[0];
 

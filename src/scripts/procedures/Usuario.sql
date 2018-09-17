@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION seguranca.LoginUsuario(
 /*
 SELECT *
 FROM seguranca.LoginUsuario(
-        'admin',
+        'jamal',
         'teste123'
 );
 */
