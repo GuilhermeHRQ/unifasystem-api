@@ -160,3 +160,23 @@ CREATE TABLE seguranca.tipousuario (
     nome VARCHAR(20) CONSTRAINT nn_tipousuario_nome NOT NULL,
     CONSTRAINT pk_tipousuario_id PRIMARY KEY (id)
 );
+
+-- DROP TABLE seguranca.opcaomenu;
+CREATE TABLE seguranca.opcaomenu (
+    id SERIAL,
+    idmae INTEGER,
+    url VARCHAR(100),
+    nome VARCHAR(30) CONSTRAINT nn_opcaomenu_nome NOT NULL,
+    CONSTRAINT pk_opcaomenu_id PRIMARY KEY (id),
+    CONSTRAINT fk_opcaomenu_idmae FOREIGN KEY (idmae) REFERENCES seguranca.opcaomenu(id)
+);
+
+-- DROP TABLE seguranca.tipousuario;
+CREATE TABLE seguranca.opcaomenuacesso (
+    id SERIAL,
+    idopcaomenu INTEGER CONSTRAINT nn_opcaomenuacesso_idopcaomenu NOT NULL,
+    idtipousuario INTEGER CONSTRAINT nn_opcaomenuacesso_idtipousuario NOT NULL,
+    CONSTRAINT pk_opcaomenuacesso_id PRIMARY KEY (id),
+    CONSTRAINT fk_opcaomenuacesso_idopcaomenu FOREIGN KEY (idopcaomenu) REFERENCES seguranca.opcaomenu(id),
+    CONSTRAINT fk_opcaomenuacesso_idtipousuario FOREIGN KEY (idtipousuario) REFERENCES seguranca.tipousuario(id)
+);

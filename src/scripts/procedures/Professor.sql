@@ -16,14 +16,14 @@ CREATE OR REPLACE FUNCTION Administracao.InserirProfessor(
 /*
 
 SELECT * FROM Administracao.InserirProfessor(
-    '12345678909',
+    '11111111',
     'Jamal',
     'Oliveira',
     '1999-02-12',
     1000.00,
-    'jamal@b.com',
+    'a@b.com',
     '16992417883',
-    'jamal',
+    'jamale',
     'teste123',
     '[
         {
@@ -54,8 +54,6 @@ BEGIN
         );
     END IF;
 
-
-
     IF EXISTS(SELECT 1
               FROM Administracao.professor p
               WHERE p.email = pEmail)
@@ -63,6 +61,16 @@ BEGIN
         RETURN json_build_object(
             'executionCode', 2,
             'message', 'Email já cadastrado'
+        );
+    END IF;
+
+    IF EXISTS(SELECT 1
+              FROM Seguranca.usuarioAcesso ua
+              WHERE ua.logon = pLogon)
+    THEN
+        RETURN json_build_object(
+            'executionCode', 3,
+            'message', 'Logon já cadastrado'
         );
     END IF;
 
@@ -155,7 +163,8 @@ CREATE OR REPLACE FUNCTION Administracao.SelecionarProfessor(
         "id"          INTEGER,
         "nome"        VARCHAR(30),
         "sobrenome"   VARCHAR(30),
-        "cpf"         CHAR(11)
+        "cpf"         CHAR(11),
+        "ativo"       BOOLEAN
     ) AS $$
 
 /*
@@ -171,14 +180,17 @@ BEGIN
         p.id,
         p.nome,
         p.sobrenome,
-        p.cpf
+        p.cpf,
+        ua.ativo
     FROM Administracao.professor p
+        INNER JOIN Seguranca.usuarioAcesso ua ON ua.idUsuario = p.id
     WHERE
         CASE WHEN pFiltro IS NOT NULL
             THEN p.nome ILIKE '%' || pFiltro || '%' OR p.sobrenome ILIKE '%' || pFiltro || '%'
         ELSE
             TRUE
         END
+        AND ua.ativo IS TRUE
     LIMIT
         CASE WHEN pLinhas > 0 AND pPagina > 0
             THEN pLinhas
@@ -211,6 +223,7 @@ CREATE OR REPLACE FUNCTION Administracao.SelecionarProfessorPorId(
         "logon"          VARCHAR(10),
         "idTipoUsuario"  INTEGER,
         "ultimoLogin"    TIMESTAMP,
+        "ativo"          BOOLEAN,
         "endereco"       JSON
     ) AS $$
 
@@ -232,6 +245,7 @@ BEGIN
         ua.logon,
         ua.idTipoUsuario,
         ua.ultimoLogin,
+        ua.ativo,
         (
             SELECT COALESCE(json_agg(enderecoJson), '[]')
             FROM (
@@ -251,6 +265,163 @@ BEGIN
         INNER JOIN Seguranca.usuarioAcesso ua ON (ua.idUsuario = p.id)
     WHERE p.id = pId;
 END;
+$$
+LANGUAGE PLPGSQL;
+
+
+SELECT public.DeletarFuncoes('Administracao', 'AtualizarProfessor');
+CREATE OR REPLACE FUNCTION Administracao.AtualizarProfessor(
+    pId             INTEGER,
+    pCpf            CHAR(8),
+    pNome           VARCHAR(30),
+    pSobrenome      VARCHAR(30),
+    pDataNascimento DATE,
+    pSalario        NUMERIC(10, 2),
+    pEmail          VARCHAR(255),
+    pTelefone       CHAR(11),
+    pLogon          VARCHAR(10),
+    pAtivo          BOOLEAN,
+    pEndereco       JSON
+)
+    RETURNS JSON AS $$
+
+/*
+SELECT * FROM Administracao.AtualizarProfessor (
+    8,
+    '13245678908',
+    'Adroso',
+    'Bata',
+    '2018-09-18',
+    15520.20,
+    'batata@va.com',
+    '16998635542',
+    'jamelaco',
+    true,
+    '[
+        {
+            "id": 7,
+            "cep": "14409023",
+            "idCidade": 2,
+            "logradouro": "Rua das Pinhas",
+            "numero": "564",
+            "bairro": "Distrito",
+            "complemento": "Em frente o poste"
+        }
+    ]' ::JSON
+);
+*/
+
+BEGIN
+
+    IF EXISTS(SELECT 1
+              FROM Administracao.professor p
+              WHERE p.cpf = pCpf
+                    AND p.id <> pId)
+    THEN
+        RETURN json_build_object(
+            'executionCode', 1,
+            'message', 'CPF já cadastrado'
+        );
+    END IF;
+
+    IF EXISTS(SELECT 1
+              FROM Administracao.professor p
+              WHERE p.email = pEmail
+                    AND p.id <> pId)
+    THEN
+        RETURN json_build_object(
+            'executionCode', 2,
+            'message', 'Email já cadastrado'
+        );
+    END IF;
+
+    IF EXISTS(SELECT 1
+              FROM Seguranca.usuarioAcesso ua
+              WHERE ua.logon = pLogon
+                    AND ua.idUsuario <> pId)
+    THEN
+        RETURN json_build_object(
+            'executionCode', 3,
+            'message', 'Logon já cadastrado'
+        );
+    END IF;
+
+
+    UPDATE Administracao.professor
+    SET cpf            = pCpf,
+        nome           = pNome,
+        sobrenome      = pSobrenome,
+        dataNascimento = pDataNascimento,
+        salario        = pSalario,
+        email          = pEmail,
+        telefone       = pTelefone
+    WHERE id = pId;
+
+    UPDATE Administracao.endereco pe
+    SET cep         = e."cep",
+        idCidade    = e."idCidade",
+        logradouro  = e."logradouro",
+        bairro      = e."bairro",
+        numero      = e."numero",
+        complemento = e."complemento"
+    FROM json_to_recordset(pEndereco)
+        AS e(
+         "id" INTEGER,
+         "cep" CHAR(8),
+         "idCidade" INTEGER,
+         "logradouro" VARCHAR,
+         "bairro" VARCHAR,
+         "numero" VARCHAR,
+         "complemento" VARCHAR
+         )
+    WHERE pe.id = e.id;
+
+    UPDATE Seguranca.usuarioAcesso
+    SET nome  = pNome,
+        logon = pLogon,
+        ativo = pAtivo
+    WHERE idUsuario = pId;
+
+    RETURN json_build_object(
+        'executionCode', 0,
+        'message', 'Professor atualizado com sucesso'
+    );
+END;
+
+$$
+LANGUAGE PLPGSQL;
+
+SELECT public.DeletarFuncoes('Administracao', 'ExcluirProfessor');
+CREATE OR REPLACE FUNCTION Administracao.ExcluirProfessor(
+    pId INTEGER
+)
+    RETURNS JSON AS $$
+
+/*
+    SELECT * FROM Administracao.ExcluirProfessor(8);
+*/
+
+BEGIN
+    IF NOT EXISTS(SELECT 1
+                  FROM Administracao.professor p
+                  WHERE p.id = pId)
+    THEN
+        RETURN json_build_object(
+            'executionCode', 1,
+            'message', 'Professor não encontrado'
+        );
+    END IF;
+
+    UPDATE Seguranca.usuarioAcesso
+    SET ativo = FALSE
+    WHERE idUsuario = pId;
+
+    RETURN json_build_object(
+        'executionCode', 0,
+        'message', 'Professor excluído com sucesso'
+    );
+END;
+
 $$
 LANGUAGE PLPGSQL;
 

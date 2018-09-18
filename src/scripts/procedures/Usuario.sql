@@ -1,4 +1,6 @@
-CREATE OR REPLACE FUNCTION seguranca.LoginUsuario(
+SELECT *
+FROM public.DeletarFuncoes('Seguranca', 'LoginUsuario');
+CREATE OR REPLACE FUNCTION Seguranca.LoginUsuario(
     pLogin VARCHAR,
     pSenha VARCHAR
 )
@@ -9,7 +11,9 @@ CREATE OR REPLACE FUNCTION seguranca.LoginUsuario(
         "nome"            VARCHAR(50),
         "logon"           VARCHAR(10),
         "ativo"           BOOLEAN,
-        "senhaCorreta"    BOOLEAN
+        "senhaCorreta"    BOOLEAN,
+        "ultimoLogin"     TIMESTAMP WITH TIME ZONE,
+        "opcoes"          JSON
     ) AS $$
 
 /*
@@ -20,7 +24,20 @@ FROM seguranca.LoginUsuario(
 );
 */
 
+DECLARE
+    vSenhaCorreta BOOLEAN;
 BEGIN
+
+    vSenhaCorreta = (SELECT ua.senha = md5(pSenha)
+                     FROM Seguranca.usuarioAcesso ua
+                     WHERE ua.logon = pLogin);
+
+    IF vSenhaCorreta IS TRUE
+    THEN
+        UPDATE Seguranca.usuarioAcesso ua
+        SET ultimoLogin = NOW()
+        WHERE ua.logon = pLogin;
+    END IF;
 
     RETURN QUERY
     SELECT
@@ -30,15 +47,31 @@ BEGIN
         ua.nome,
         ua.logon,
         ua.ativo,
-        (ua.senha = md5(pSenha))
+        (ua.senha = md5(pSenha)) senhaCorreta,
+        ua.ultimoLogin,
+        (CASE WHEN (ua.senha = md5(pSenha))
+            THEN (SELECT COALESCE(json_agg(opcoesJson), '[]')
+                  FROM (SELECT
+                            opm.id,
+                            opm.idmae,
+                            opm.url,
+                            opm.nome
+                        FROM Seguranca.opcaomenuacesso opma
+                            INNER JOIN Seguranca.opcaomenu opm ON (opma.idopcaomenu = opm.id)
+                        WHERE opma.idtipousuario = ua.idtipousuario
+                        ORDER BY opm.nome) opcoesJson)
+         ELSE
+             '[]'
+         END)                    opcoes
     FROM seguranca.usuarioacesso ua
     WHERE ua.logon = pLogin;
 END;
 $$
 LANGUAGE PLPGSQL;
 
-
-CREATE OR REPLACE FUNCTION seguranca.RefazLogin(
+SELECT *
+FROM public.DeletarFuncoes('Seguranca', 'RefazLogin');
+CREATE OR REPLACE FUNCTION Seguranca.RefazLogin(
     pIdUsuarioAcesso INTEGER
 )
     RETURNS TABLE(
@@ -46,7 +79,9 @@ CREATE OR REPLACE FUNCTION seguranca.RefazLogin(
         "idUsuarioAcesso" INTEGER,
         "idTipoUsuario"   INTEGER,
         "nome"            VARCHAR,
-        "logon"           VARCHAR
+        "logon"           VARCHAR,
+        "ativo"           BOOLEAN,
+        "opcoes"          JSON
     ) AS $$
 
 -- SELECT * FROM seguranca.RefazLogin(1);
@@ -58,11 +93,23 @@ BEGIN
         ua.id,
         ua.idtipousuario,
         ua.nome,
-        ua.logon
+        ua.logon,
+        ua.ativo,
+        (SELECT CASE
+                WHEN json_agg(opcoesJson) IS NULL
+                    THEN '[]'
+                ELSE json_agg(opcoesJson) END
+         FROM (SELECT
+                   opm.id,
+                   opm.idmae,
+                   opm.url,
+                   opm.nome
+               FROM Seguranca.opcaomenuacesso opma
+                   INNER JOIN Seguranca.opcaomenu opm ON (opma.idopcaomenu = opm.id)
+               WHERE opma.idtipousuario = ua.idtipousuario
+               ORDER BY opm.nome) opcoesJson) opcoes
     FROM seguranca.usuarioacesso ua
     WHERE ua.id = pIdUsuarioAcesso;
 END;
 $$
 LANGUAGE PLPGSQL;
-
-

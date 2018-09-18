@@ -1,6 +1,6 @@
 'use strict';
 
-const consign = require('consign');
+const consign = require('consign')({verbose: false});
 const express = require('express');
 const app = express();
 const body = require('body-parser');
@@ -21,7 +21,7 @@ app.use(body.urlencoded({extended: false}));
 app.use(cors);
 app.use(response);
 
-consign()
+consign
         .include('./src/api/routes')
         .into(app);
 

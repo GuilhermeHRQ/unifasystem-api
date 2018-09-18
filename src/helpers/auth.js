@@ -1,15 +1,10 @@
 'use strict';
 const pass = 'qwur213iu4i32btwebve4wy';
 
-module.exports = {
-    generateToken,
-    verify
-};
-
 const jwt = require('jsonwebtoken');
 
 /**
- * Gera um token com os dados passados no params, com base na SALT_KEY e com expiração de 1d
+ * Gera um token com os dados passados no params, com base na pass e com expiração de 365d
  * @param {Object} data Informações que serão colocadas no token 
  */
 async function generateToken(data) {
@@ -37,7 +32,7 @@ function verify(fn) {
             if (error) {
                 return res.finish({
                     httpCode: 401,
-                    message: 'Sessão inválida'
+                    message: 'Impossível ler o token'
                 });
             }
 
@@ -47,3 +42,6 @@ function verify(fn) {
         });
     };
 }
+
+global.generateToken = generateToken;
+global.verify = verify;
