@@ -42,8 +42,8 @@ async function selecionarProfessor(req, res) {
     try {
         const params = {
             filtro: req.query.filtro,
-            linhas: req.query.linhas,
-            pagina: req.query.pagina
+            linhas: req.query.linhas || 10,
+            pagina: req.query.pagina || 1
         };
 
         const data = await service.selecionarProfessor(params);

@@ -13,21 +13,20 @@ async function inserirCurso(params) {
 }
 
 async function selecionarCurso(params) {
-    const data = await repository.selecionarCurso(params);
+    let data = await repository.selecionarCurso(params);
 
-    data.totalLinahs = data.length ? data[0].totalLinhas : 0;
+    data.totalLinhas = data.length ? data[0].totalLinhas : 0;
 
     data.forEach(item => {
         delete item.totalLinhas
     });
-
     return data;
 }
 
 async function selecionarCursoPorId(params) {
     let data = await repository.selecionarCursoPorId(params);
 
-    if(!data.length) {
+    if (!data.length) {
         throw {
             executionCode: 1,
             message: 'Curso não encontrado'
@@ -50,7 +49,7 @@ async function atualizarCurso(params) {
             error.httpCode = 404;
     }
 
-    if(error) {
+    if (error) {
         throw error;
     }
 
@@ -68,7 +67,7 @@ async function excluirCurso(params) {
             error.httpCode = 404;
     }
 
-    if(error) {
+    if (error) {
         throw error;
     }
 

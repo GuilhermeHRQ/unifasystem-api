@@ -34,16 +34,16 @@ async function inserirCurso(req, res) {
 async function selecionarCurso(req, res) {
     try {
         const params = {
-            filtro: req.query.filtro,
-            linhas: req.query.linhas,
-            pagina: req.query.pagina
+            filtro: req.query.filtro || null,
+            linhas: req.query.linhas || 10,
+            pagina: req.query.pagina || 1
         };
 
         const data = await service.selecionarCurso(params);
 
         return res.finish({
-            content: data,
-            totalLinhas: data.totalLinhas
+            totalLinhas: data.totalLinhas,
+            content: data
         });
 
     } catch (error) {

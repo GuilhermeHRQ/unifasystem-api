@@ -1,5 +1,5 @@
 module.exports = {
-    adminisracao: {
+    administracao: {
         professor: {
             inserir: {
                 method: 'POST',
