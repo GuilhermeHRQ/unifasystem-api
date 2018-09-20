@@ -41,6 +41,7 @@ CREATE OR REPLACE FUNCTION Administracao.SelecionarDisciplina(
     pPagina INTEGER
 )
     RETURNS TABLE(
+        "totalLinhas"  BIGINT,
         "id"           INTEGER,
         "nome"         VARCHAR(60),
         "cargaHoraria" NUMERIC(5, 2)
@@ -53,6 +54,9 @@ CREATE OR REPLACE FUNCTION Administracao.SelecionarDisciplina(
 BEGIN
     RETURN QUERY
     SELECT
+        COUNT(1)
+        OVER (
+            PARTITION BY 1 ),
         d.id,
         d.nome,
         d.cargaHoraria

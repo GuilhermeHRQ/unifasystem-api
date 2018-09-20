@@ -48,6 +48,28 @@ module.exports = {
                 url: `${global.config.host}:${global.config.port}/curso/:id`
             }
         },
+        disciplina: {
+            inserir: {
+                method: 'POST',
+                url: `${global.config.host}:${global.config.port}/disciplina`
+            },
+            selecionar: {
+                method: 'GET',
+                url: `${global.config.host}:${global.config.port}/disciplina`
+            },
+            selecionarPorId: {
+                method: 'GET',
+                url: `${global.config.host}:${global.config.port}/disciplina/:id`
+            },
+            atualizar: {
+                method: 'PUT',
+                url: `${global.config.host}:${global.config.port}/disciplina/:id`
+            },
+            excluir: {
+                method: 'DELETE',
+                url: `${global.config.host}:${global.config.port}/disciplina/:id`
+            }
+        },
         estado: {
             selecionar: {
                 method: 'GET',
