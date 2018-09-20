@@ -47,6 +47,18 @@ module.exports = {
                 method: 'DELETE',
                 url: `${global.config.host}:${global.config.port}/curso/:id`
             }
+        },
+        estado: {
+            selecionar: {
+                method: 'GET',
+                url: `${global.config.host}:${global.config.port}/estado`
+            }
+        },
+        cidade: {
+            selecionar: {
+                method: 'GET',
+                url: `${global.config.host}:${global.config.port}/cidade`
+            }
         }
     },
     seguranca: {

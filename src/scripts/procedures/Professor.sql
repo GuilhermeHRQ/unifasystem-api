@@ -25,16 +25,14 @@ SELECT * FROM Administracao.InserirProfessor(
     '16992417883',
     'jamale',
     'teste123',
-    '[
-        {
+    '{
             "cep": "14409013",
-            "idCidade": 1,
+            "idCidade": 3304557,
             "logradouro": "Rua Jose Oliva",
             "numero": "33",
             "bairro": "Batatao",
             "complemento": "Iparitondgqa esquerda"
-        }
-    ]' ::JSON
+        }' ::JSON
 );
 
 */
@@ -49,8 +47,8 @@ BEGIN
               WHERE p.cpf = pCpf)
     THEN
         RETURN json_build_object(
-                'executionCode', 1,
-                'message', 'CPF já cadastrado'
+            'executionCode', 1,
+            'message', 'CPF já cadastrado'
         );
     END IF;
 
@@ -59,8 +57,8 @@ BEGIN
               WHERE p.email = pEmail)
     THEN
         RETURN json_build_object(
-                'executionCode', 2,
-                'message', 'Email já cadastrado'
+            'executionCode', 2,
+            'message', 'Email já cadastrado'
         );
     END IF;
 
@@ -69,8 +67,8 @@ BEGIN
               WHERE ua.logon = pLogon)
     THEN
         RETURN json_build_object(
-                'executionCode', 3,
-                'message', 'Logon já cadastrado'
+            'executionCode', 3,
+            'message', 'Logon já cadastrado'
         );
     END IF;
 
@@ -91,7 +89,7 @@ BEGIN
                 "numero",
                 "bairro",
                 "complemento"
-            FROM json_to_recordset(pEndereco)
+            FROM json_to_record(pEndereco)
                 AS x(
                  "cep" CHAR(8),
                  "idCidade" INTEGER,
@@ -142,11 +140,11 @@ BEGIN
     );
 
     RETURN json_build_object(
-            'executionCode', 0,
-            'message', 'Professor inserido com sucesso',
-            'content', json_build_object(
-                    'id', vIdProfessor
-            )
+        'executionCode', 0,
+        'message', 'Professor inserido com sucesso',
+        'content', json_build_object(
+            'id', vIdProfessor
+        )
     );
 END;
 $$
@@ -222,13 +220,13 @@ CREATE OR REPLACE FUNCTION Administracao.SelecionarProfessorPorId(
         "telefone"       CHAR(11),
         "logon"          VARCHAR(10),
         "idTipoUsuario"  INTEGER,
-        "ultimoLogin"    TIMESTAMP,
+        "ultimoLogin"    TIMESTAMP WITH TIME ZONE,
         "ativo"          BOOLEAN,
         "endereco"       JSON
     ) AS $$
 
 /*
-    SELECT * FROM Administracao.SelecionarProfessorPorId(3);
+    SELECT * FROM Administracao.SelecionarProfessorPorId(7);
 */
 
 BEGIN
@@ -247,17 +245,19 @@ BEGIN
         ua.ultimoLogin,
         ua.ativo,
         (
-            SELECT COALESCE(json_agg(enderecoJson), '[]')
+            SELECT COALESCE(json_agg(enderecoJson) -> 0, '[]')
             FROM (
                      SELECT
                          pe.id          "id",
                          pe.cep         "cep",
                          pe.idCidade    "idCidade",
+                         c.uf           "uf",
                          pe.logradouro  "logradouro",
                          pe.numero      "numero",
                          pe.bairro      "bairro",
                          pe.complemento "complemento"
                      FROM Administracao.endereco pe
+                         INNER JOIN Administracao.cidade c ON (c.id = pe.idCidade)
                      WHERE pe.id = p.idEndereco
                  ) enderecoJson
         ) endereco
@@ -320,17 +320,15 @@ SELECT * FROM Administracao.AtualizarProfessor (
     '16998635542',
     'jamelaco',
     true,
-    '[
-        {
+    '{
             "id": 7,
             "cep": "14409023",
-            "idCidade": 2,
+            "idCidade": 3304557,
             "logradouro": "Rua das Pinhas",
             "numero": "564",
             "bairro": "Distrito",
             "complemento": "Em frente o poste"
-        }
-    ]' ::JSON
+        }' ::JSON
 );
 */
 
@@ -342,8 +340,8 @@ BEGIN
                     AND p.id <> pId)
     THEN
         RETURN json_build_object(
-                'executionCode', 1,
-                'message', 'CPF já cadastrado'
+            'executionCode', 1,
+            'message', 'CPF já cadastrado'
         );
     END IF;
 
@@ -353,8 +351,8 @@ BEGIN
                     AND p.id <> pId)
     THEN
         RETURN json_build_object(
-                'executionCode', 2,
-                'message', 'Email já cadastrado'
+            'executionCode', 2,
+            'message', 'Email já cadastrado'
         );
     END IF;
 
@@ -364,8 +362,8 @@ BEGIN
                     AND ua.idUsuario <> pId)
     THEN
         RETURN json_build_object(
-                'executionCode', 3,
-                'message', 'Logon já cadastrado'
+            'executionCode', 3,
+            'message', 'Logon já cadastrado'
         );
     END IF;
 
@@ -387,7 +385,7 @@ BEGIN
         bairro      = e."bairro",
         numero      = e."numero",
         complemento = e."complemento"
-    FROM json_to_recordset(pEndereco)
+    FROM json_to_record(pEndereco)
         AS e(
          "id" INTEGER,
          "cep" CHAR(8),
@@ -406,8 +404,8 @@ BEGIN
     WHERE idUsuario = pId;
 
     RETURN json_build_object(
-            'executionCode', 0,
-            'message', 'Professor atualizado com sucesso'
+        'executionCode', 0,
+        'message', 'Professor atualizado com sucesso'
     );
 END;
 
@@ -430,8 +428,8 @@ BEGIN
                   WHERE p.id = pId)
     THEN
         RETURN json_build_object(
-                'executionCode', 1,
-                'message', 'Professor não encontrado'
+            'executionCode', 1,
+            'message', 'Professor não encontrado'
         );
     END IF;
 
@@ -440,8 +438,8 @@ BEGIN
     WHERE idUsuario = pId;
 
     RETURN json_build_object(
-            'executionCode', 0,
-            'message', 'Professor excluído com sucesso'
+        'executionCode', 0,
+        'message', 'Professor excluído com sucesso'
     );
 END;
 
