@@ -12,18 +12,32 @@ CREATE OR REPLACE FUNCTION Seguranca.LoginUsuario(
         "logon"           VARCHAR(10),
         "ativo"           BOOLEAN,
         "senhaCorreta"    BOOLEAN,
+        "ultimoLogin"     TIMESTAMP WITH TIME ZONE,
         "opcoes"          JSON
     ) AS $$
 
 /*
 SELECT *
 FROM seguranca.LoginUsuario(
-        'admin',
+        'jamal',
         'teste123'
 );
 */
 
+DECLARE
+    vSenhaCorreta BOOLEAN;
 BEGIN
+
+    vSenhaCorreta = (SELECT ua.senha = md5(pSenha)
+                     FROM Seguranca.usuarioAcesso ua
+                     WHERE ua.logon = pLogin);
+
+    IF vSenhaCorreta IS TRUE
+    THEN
+        UPDATE Seguranca.usuarioAcesso ua
+        SET ultimoLogin = NOW()
+        WHERE ua.logon = pLogin;
+    END IF;
 
     RETURN QUERY
     SELECT
@@ -33,12 +47,10 @@ BEGIN
         ua.nome,
         ua.logon,
         ua.ativo,
-        (ua.senha = md5(pSenha)),
+        (ua.senha = md5(pSenha)) senhaCorreta,
+        ua.ultimoLogin,
         (CASE WHEN (ua.senha = md5(pSenha))
-            THEN (SELECT CASE
-                         WHEN json_agg(opcoesJson) IS NULL
-                             THEN '[]'
-                         ELSE json_agg(opcoesJson) END
+            THEN (SELECT COALESCE(json_agg(opcoesJson), '[]')
                   FROM (SELECT
                             opm.id,
                             opm.idmae,
@@ -50,7 +62,7 @@ BEGIN
                         ORDER BY opm.nome) opcoesJson)
          ELSE
              '[]'
-         END) opcoes
+         END)                    opcoes
     FROM seguranca.usuarioacesso ua
     WHERE ua.logon = pLogin;
 END;

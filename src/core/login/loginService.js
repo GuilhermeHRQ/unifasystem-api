@@ -63,7 +63,6 @@ async function login(params) {
     return {
         user: data,
         api: routes,
-        opcao: [],
         token: token
     }
 }
@@ -96,7 +95,6 @@ async function refazLogin(params) {
     return {
         user: data,
         api: routes,
-        opcao: [],
         token: token
     }
 }
