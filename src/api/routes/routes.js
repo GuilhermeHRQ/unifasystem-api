@@ -3,83 +3,83 @@ module.exports = {
         professor: {
             inserir: {
                 method: 'POST',
-                url: `${global.config.host}:${global.config.port}/professor`
+                url: `${global.config.host}/professor`
             },
             selecionar: {
                 method: 'GET',
-                url: `${global.config.host}:${global.config.port}/professor`
+                url: `${global.config.host}/professor`
             },
             selecionarSimples: {
                 method: 'GET',
-                url: `${global.config.host}:${global.config.port}/professor-simples`
+                url: `${global.config.host}/professor-simples`
             },
             selecionarPorId: {
                 method: 'GET',
-                url: `${global.config.host}:${global.config.port}/professor/:id`
+                url: `${global.config.host}/professor/:id`
             },
             atualizar: {
                 method: 'PUT',
-                url: `${global.config.host}:${global.config.port}/professor/:id`
+                url: `${global.config.host}/professor/:id`
             },
             excluir: {
                 method: 'DELETE',
-                url: `${global.config.host}:${global.config.port}/professor/:id`
+                url: `${global.config.host}/professor/:id`
             }
         },
         curso: {
             inserir: {
                 method: 'POST',
-                url: `${global.config.host}:${global.config.port}/curso`
+                url: `${global.config.host}/curso`
             },
             selecionar: {
                 method: 'GET',
-                url: `${global.config.host}:${global.config.port}/curso`
+                url: `${global.config.host}/curso`
             },
             selecionarPorId: {
                 method: 'GET',
-                url: `${global.config.host}:${global.config.port}/curso/:id`
+                url: `${global.config.host}/curso/:id`
             },
             atualizar: {
                 method: 'PUT',
-                url: `${global.config.host}:${global.config.port}/curso/:id`
+                url: `${global.config.host}/curso/:id`
             },
             excluir: {
                 method: 'DELETE',
-                url: `${global.config.host}:${global.config.port}/curso/:id`
+                url: `${global.config.host}/curso/:id`
             }
         },
         disciplina: {
             inserir: {
                 method: 'POST',
-                url: `${global.config.host}:${global.config.port}/disciplina`
+                url: `${global.config.host}/disciplina`
             },
             selecionar: {
                 method: 'GET',
-                url: `${global.config.host}:${global.config.port}/disciplina`
+                url: `${global.config.host}/disciplina`
             },
             selecionarPorId: {
                 method: 'GET',
-                url: `${global.config.host}:${global.config.port}/disciplina/:id`
+                url: `${global.config.host}/disciplina/:id`
             },
             atualizar: {
                 method: 'PUT',
-                url: `${global.config.host}:${global.config.port}/disciplina/:id`
+                url: `${global.config.host}/disciplina/:id`
             },
             excluir: {
                 method: 'DELETE',
-                url: `${global.config.host}:${global.config.port}/disciplina/:id`
+                url: `${global.config.host}/disciplina/:id`
             }
         },
         estado: {
             selecionar: {
                 method: 'GET',
-                url: `${global.config.host}:${global.config.port}/estado`
+                url: `${global.config.host}/estado`
             }
         },
         cidade: {
             selecionar: {
                 method: 'GET',
-                url: `${global.config.host}:${global.config.port}/cidade`
+                url: `${global.config.host}/cidade`
             }
         }
     },
@@ -87,7 +87,7 @@ module.exports = {
         login: {
             refazer: {
                 method: 'GET',
-                url: `${global.config.host}:${global.config.port}/login/refazer`
+                url: `${global.config.host}/login/refazer`
             }
         }
     }
