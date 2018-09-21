@@ -11,7 +11,8 @@ require('./src/helpers/auth');
 
 global.config = {
     host: process.env.HOST || 'http://localhost',
-    port: process.env.PORT || 4200
+    port: process.env.PORT || 4200,
+    isProduction: process.env.isProduction || false
 };
 
 app.use(body.json({limit: '10mb'}));
