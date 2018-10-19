@@ -1,6 +1,6 @@
 -- CREATE SCHEMA administracao;
 
--- DROP TABLE administracao.disciplina;
+-- DROP TABLE administracao.disciplina CASCADE;
 CREATE TABLE administracao.disciplina (
     id           SERIAL,
     nome         VARCHAR(60)          CONSTRAINT nn_disciplina_nome NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE administracao.curso (
     CONSTRAINT uq_curso_id_coordenador UNIQUE (idcoordenador)
 );
 
--- DROP TABLE administracao.professor;
+-- DROP TABLE administracao.professor CASCADE;
 CREATE TABLE administracao.professor (
     id             SERIAL,
     cpf            CHAR(11)       CONSTRAINT nn_professor_cpf NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE administracao.professor (
     CONSTRAINT uq_professor_email UNIQUE (email)
 );
 
--- DROP TABLE administracao.endereco;
+-- DROP TABLE administracao.endereco CASCADE;
 CREATE TABLE administracao.endereco (
     id          SERIAL,
     cep         CHAR(8)      CONSTRAINT nn_professor_cep NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE administracao.endereco (
     CONSTRAINT fk_endereco_cidade_idcidade FOREIGN KEY (idcidade) REFERENCES administracao.cidade (id)
 );
 
--- DROP TABLE administracao.aluno;
+-- DROP TABLE administracao.aluno CASCADE;
 CREATE TABLE administracao.aluno (
     id             SERIAL,
     cpf            CHAR(11)     CONSTRAINT nn_aluno_cpf NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE administracao.turma (
     CONSTRAINT fk_turma_turno_idturno FOREIGN KEY (idturno) REFERENCES administracao.turno (id)
 );
 
--- DROP TABLE administracao.professordisciplinaturma;
+-- DROP TABLE administracao.professordisciplinaturma CASCADE;
 CREATE TABLE administracao.professordisciplinaturma (
     idprofessor  INTEGER CONSTRAINT nn_professordisciplinaturma_idprofessor NOT NULL,
     iddisciplina INTEGER CONSTRAINT nn_professordisciplinaturma_iddisciplina NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE administracao.professordisciplinaturma (
     CONSTRAINT fk_professordisciplinaturma_turma_idturma FOREIGN KEY (idturma) REFERENCES administracao.turma (id)
 );
 
--- DROP TABLE administracao.alunoturma;
+-- DROP TABLE administracao.alunoturma CASCADE;
 CREATE TABLE administracao.alunoturma (
     idturma       INTEGER              CONSTRAINT nn_alunoturma_idturma NOT NULL,
     idaluno       INTEGER              CONSTRAINT nn_alunoturma_idaluno NOT NULL,
@@ -138,7 +138,7 @@ CREATE TABLE administracao.cidade (
 
 -- CREATE SCHEMA seguranca;
 
--- DROP TABLE seguranca.usuarioacesso;
+-- DROP TABLE seguranca.usuarioacesso CASCADE;
 CREATE TABLE seguranca.usuarioacesso (
     id            SERIAL,
     idusuario     INTEGER              CONSTRAINT nn_usuarioacesso_idusuario NOT NULL,
@@ -154,14 +154,14 @@ CREATE TABLE seguranca.usuarioacesso (
     CONSTRAINT uq_usuarioacesso_idusuario UNIQUE (idusuario)
 );
 
--- DROP TABLE seguranca.tipousuario;
+-- DROP TABLE seguranca.tipousuario CASCADE;
 CREATE TABLE seguranca.tipousuario (
     id   SERIAL,
     nome VARCHAR(20) CONSTRAINT nn_tipousuario_nome NOT NULL,
     CONSTRAINT pk_tipousuario_id PRIMARY KEY (id)
 );
 
--- DROP TABLE seguranca.opcaomenu;
+-- DROP TABLE seguranca.opcaomenu CASCADE;
 CREATE TABLE seguranca.opcaomenu (
     id SERIAL,
     idmae INTEGER,
@@ -171,7 +171,7 @@ CREATE TABLE seguranca.opcaomenu (
     CONSTRAINT fk_opcaomenu_idmae FOREIGN KEY (idmae) REFERENCES seguranca.opcaomenu(id)
 );
 
--- DROP TABLE seguranca.tipousuario;
+-- DROP TABLE seguranca.opcaomenuacesso CASCADE;
 CREATE TABLE seguranca.opcaomenuacesso (
     id SERIAL,
     idopcaomenu INTEGER CONSTRAINT nn_opcaomenuacesso_idopcaomenu NOT NULL,
