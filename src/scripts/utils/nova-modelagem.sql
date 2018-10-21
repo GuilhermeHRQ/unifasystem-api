@@ -1,3 +1,8 @@
+DROP TABLE IF EXISTS Administracao.alunoPresenca;
+DROP TABLE IF EXISTS Administracao.controlePresenca;
+DROP TABLE IF EXISTS Administracao.status;
+DROP TABLE IF EXISTS Seguranca.acessoProfessor;
+
 CREATE TABLE seguranca.acessoprofessor (
     id          SERIAL,
     codigo      INTEGER      CONSTRAINT nn_acessoprofessor_codigo NOT NULL,
@@ -12,7 +17,7 @@ CREATE TABLE seguranca.acessoprofessor (
 
 CREATE TABLE administracao.status (
     id   SERIAL,
-    nome VARCHAR(30),
+    descricao VARCHAR(30),
     CONSTRAINT pk_status_id PRIMARY KEY (id)
 );
 
