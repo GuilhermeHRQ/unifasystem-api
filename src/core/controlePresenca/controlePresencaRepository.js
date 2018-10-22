@@ -31,6 +31,7 @@ async function selecionar(params) {
         params.idDisciplina,
         params.dataInicial,
         params.dataFinal,
+        params.idStatus,
         params.linhas,
         params.pagina
     ]);

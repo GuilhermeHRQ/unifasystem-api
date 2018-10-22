@@ -1,6 +1,6 @@
 -- DropdownStatus
-SELECT public.DeletarFuncoes('Administracao', 'DropdownStatus');
-CREATE OR REPLACE FUNCTION Administracao.DropdownStatus()
+SELECT public.DeletarFuncoes('Administracao', 'SelecionarStatusSimples');
+CREATE OR REPLACE FUNCTION Administracao.SelecionarStatusSimples()
     RETURNS JSON AS $$
 
 /*
@@ -11,7 +11,7 @@ Documentation
     Data..............: 21/10/2018
     Ex................:
 
-    SELECT * FROM Administracao.DropdownStatus();
+    SELECT * FROM Administracao.SelecionarStatusSimples();
 */
 
 DECLARE

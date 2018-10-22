@@ -14,8 +14,7 @@ async function inserir(params) {
         },
         idDisciplina: {
             required: true,
-            notNull: true,
-            number: 'integer'
+            notNull: true
         },
         idProfessor: {
             required: true,

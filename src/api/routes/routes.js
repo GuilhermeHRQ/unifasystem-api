@@ -21,6 +21,12 @@ module.exports = {
                 method: 'PUT',
                 url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/controle-presenca/:id/cancelar`
             }
+        },
+        status: {
+            selecionarSimples: {
+                method: 'GET',
+                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/selecionar-status-simples`
+            }
         }
     },
     seguranca: {

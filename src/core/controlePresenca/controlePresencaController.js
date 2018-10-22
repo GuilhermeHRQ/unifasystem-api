@@ -13,7 +13,7 @@ async function inserir(req, res) {
     try {
         const params = {
             semestre: req.body.semestre,
-            idProfessor: req.token.id,
+            idProfessor: req.token.idUsuario,
             nomeTurma: req.body.nomeTurma,
             idDisciplina: req.body.idDisciplina,
             nomeDisciplina: req.body.nomeDisciplina,
@@ -44,6 +44,7 @@ async function selecionar(req, res) {
             idDisciplina: req.body.idDisciplina || null,
             dataInicial: req.body.dataInicial || null,
             dataFinal: req.body.dataFinal || null,
+            idStatus: req.body.idStatus || null,
             linhas: req.body.linhas || 10,
             pagina: req.body.pagina || 1
         };
@@ -80,7 +81,7 @@ async function atualizar(req, res) {
     try {
         const params = {
             id: req.params.id,
-            conteudo: req.params.conteudo || null,
+            conteudo: req.body.conteudo || null,
             alunos: JSON.stringify(req.body.alunos),
             confirmarControle: req.body.confirmarControle || false
         };
