@@ -1,85 +1,25 @@
 module.exports = {
     administracao: {
-        professor: {
+        controlePresenca: {
             inserir: {
                 method: 'POST',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/professor`
+                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/controle-presenca`
             },
             selecionar: {
                 method: 'GET',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/professor`
-            },
-            selecionarSimples: {
-                method: 'GET',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/professor-simples`
+                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/controle-presenca`
             },
             selecionarPorId: {
                 method: 'GET',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/professor/:id`
+                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/controle-presenca/:id`
             },
             atualizar: {
                 method: 'PUT',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/professor/:id`
+                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/controle-presenca/:id`
             },
-            excluir: {
-                method: 'DELETE',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/professor/:id`
-            }
-        },
-        curso: {
-            inserir: {
-                method: 'POST',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/curso`
-            },
-            selecionar: {
-                method: 'GET',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/curso`
-            },
-            selecionarPorId: {
-                method: 'GET',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/curso/:id`
-            },
-            atualizar: {
+            cancelar: {
                 method: 'PUT',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/curso/:id`
-            },
-            excluir: {
-                method: 'DELETE',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/curso/:id`
-            }
-        },
-        disciplina: {
-            inserir: {
-                method: 'POST',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/disciplina`
-            },
-            selecionar: {
-                method: 'GET',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/disciplina`
-            },
-            selecionarPorId: {
-                method: 'GET',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/disciplina/:id`
-            },
-            atualizar: {
-                method: 'PUT',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/disciplina/:id`
-            },
-            excluir: {
-                method: 'DELETE',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/disciplina/:id`
-            }
-        },
-        estado: {
-            selecionar: {
-                method: 'GET',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/estado`
-            }
-        },
-        cidade: {
-            selecionar: {
-                method: 'GET',
-                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/cidade`
+                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/controle-presenca/:id/cancelar`
             }
         }
     },

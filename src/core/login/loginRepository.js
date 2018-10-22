@@ -7,22 +7,15 @@ module.exports = {
 };
 
 async function preLogin(params) {
-    let data = await db.func('Seguranca.LoginUsuario', [
+    const data = await db.func('Seguranca.Login', [
         params.login,
         params.senha
     ]);
 
-    data = data[0];
-
-    if (!data) {
+    if(!data.content.id) {
         return {
             executionCode: 1,
             message: 'Usuário não encontrado'
-        }
-    } else if (!data.ativo) {
-        return {
-            executionCode: 2,
-            message: 'Usuário bloqueado'
         }
     }
 
@@ -30,14 +23,12 @@ async function preLogin(params) {
 }
 
 async function login(params) {
-    let data = await db.func('Seguranca.LoginUsuario', [
+    let data = await db.func('Seguranca.Login', [
         params.login,
         params.senha
     ]);
 
-    data = data[0];
-
-    if (!data) {
+    if(!data.content.id) {
         return {
             executionCode: 1,
             message: 'Usuário não encontrado'
@@ -47,34 +38,13 @@ async function login(params) {
             executionCode: 2,
             message: 'Senha incorreta!'
         }
-    } else if (!data.ativo) {
-        return {
-            executionCode: 3,
-            message: 'Usuário bloqueado'
-        }
     }
 
     return data;
 }
 
 async function refazLogin(params) {
-    let data = await db.func('Seguranca.RefazLogin', [
+    return await db.func('Seguranca.RefazLogin', [
         params.id
     ]);
-
-    data = data[0];
-
-    if(!data) {
-        return {
-            executionCode: 1,
-            message: 'Usuário não encontrado'
-        }
-    } else if(!data.ativo) {
-        return {
-            executionCode: 2,
-            message: 'Usuário bloqueado'
-        }
-    }
-
-    return data;
 }

@@ -16,18 +16,13 @@ async function preLogin(params) {
         case 1:
             error = data;
             error.httpCode = 404;
-            break;
-        case 2:
-            error = data;
-            error.httpCode = 401
     }
 
     if (error) {
         throw error;
     }
 
-    delete data.senhaCorreta;
-    delete data.opcoes;
+    delete data.content.senhaCorreta;
 
     return data;
 }
