@@ -50,9 +50,7 @@ BEGIN
         WHERE email = pLogin;
     END IF;
 
-    RETURN json_build_object(
-        'content', vRes
-    );
+    RETURN vRes;
 END;
 $$
 LANGUAGE PLPGSQL;
@@ -101,9 +99,8 @@ BEGIN
              ) dados
     );
 
-    RETURN json_build_object(
-        'content', vRes
-    );
+    RETURN vRes;
 END;
 $$
 LANGUAGE PLPGSQL;
+

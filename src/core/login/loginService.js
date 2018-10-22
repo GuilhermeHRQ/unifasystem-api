@@ -22,7 +22,7 @@ async function preLogin(params) {
         throw error;
     }
 
-    delete data.content.senhaCorreta;
+    delete data.senhaCorreta;
 
     return data;
 }
@@ -38,7 +38,6 @@ async function login(params) {
             error.httpCode = 404;
             break;
         case 2:
-        case 3:
             error = data;
             error.httpCode = 401
     }
@@ -50,9 +49,8 @@ async function login(params) {
     delete data.senhaCorreta;
 
     const token = await global.generateToken({
-        idUsuario: data.idUsuario,
-        idUsuarioAcesso: data.idUsuarioAcesso,
-        idTipoUsuario: data.idTipoUsuario
+        idUsuario: data.id,
+        codigoProfessor: data.codigo
     });
 
     return {
@@ -71,10 +69,6 @@ async function refazLogin(params) {
         case 1:
             error = data;
             error.httpCode = 404;
-            break;
-        case 2:
-            error = data;
-            error.httpCode = 401;
     }
 
     if (error) {
@@ -82,9 +76,8 @@ async function refazLogin(params) {
     }
 
     const token = await global.generateToken({
-        idUsuario: data.idUsuario,
-        idUsuarioAcesso: data.idUsuarioAcesso,
-        idTipoUsuario: data.idTipoUsuario
+        idUsuario: data.id,
+        codigoProfessor: data.codigo
     });
 
     return {

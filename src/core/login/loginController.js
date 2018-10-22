@@ -22,7 +22,7 @@ async function preLogin(req, res) {
             content: {
                 user: data
             }
-        })
+        });
     } catch (error) {
         return res.finish({
             httpCode: error.httpCode || 500,
@@ -57,7 +57,7 @@ async function login(req, res) {
 async function refazLogin(req, res) {
     try {
         const params = {
-            id: req.token.idUsuarioAcesso
+            id: req.token.idUsuario
         };
 
         await scope.rafazLogin(params);

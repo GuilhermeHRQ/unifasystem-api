@@ -11,8 +11,7 @@ async function preLogin(params) {
         login: {
             required: true,
             notNull: true,
-            string: true,
-            maxLength: 30
+            string: true
         }
     };
 

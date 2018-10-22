@@ -39,7 +39,7 @@ async function inserir(req, res) {
 async function selecionar(req, res) {
     try {
         const params = {
-            idProfessor: req.token.id,
+            idProfessor: req.token.idUsuario,
             semestre: req.body.semestre || null,
             idDisciplina: req.body.idDisciplina || null,
             dataInicial: req.body.dataInicial || null,

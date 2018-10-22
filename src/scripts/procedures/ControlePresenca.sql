@@ -206,12 +206,12 @@ BEGIN
                          SELECT COALESCE(json_agg(alunos), '[]')
                          FROM (
                                   SELECT
-                                      ap.idControlePresenca,
-                                      ap.idAluno,
-                                      ap.nomeAluno,
-                                      ap.horaEntrada,
-                                      ap.horaSaida,
-                                      ap.quantidadePresencas
+                                      ap.idControlePresenca "idControlePresenca",
+                                      ap.idAluno "idAluno",
+                                      ap.nomeAluno "nomeAluno",
+                                      ap.horaEntrada "horaEntrada",
+                                      ap.horaSaida "horaSaida",
+                                      ap.quantidadePresencas "quantidadePresencas"
                                   FROM Administracao.alunoPresenca ap
                                   WHERE ap.idControlePresenca = pId
                               ) alunos

@@ -7,12 +7,12 @@ module.exports = {
 };
 
 async function preLogin(params) {
-    const data = await db.func('Seguranca.Login', [
+    const data = await db.json('Seguranca.Login', [
         params.login,
         params.senha
     ]);
 
-    if(!data.content.id) {
+    if(!data) {
         return {
             executionCode: 1,
             message: 'Usuário não encontrado'
@@ -23,12 +23,12 @@ async function preLogin(params) {
 }
 
 async function login(params) {
-    let data = await db.func('Seguranca.Login', [
+    let data = await db.json('Seguranca.Login', [
         params.login,
         params.senha
     ]);
 
-    if(!data.content.id) {
+    if(!data) {
         return {
             executionCode: 1,
             message: 'Usuário não encontrado'
@@ -44,7 +44,7 @@ async function login(params) {
 }
 
 async function refazLogin(params) {
-    return await db.func('Seguranca.RefazLogin', [
+    return await db.json('Seguranca.RefazLogin', [
         params.id
     ]);
 }
