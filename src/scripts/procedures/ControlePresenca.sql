@@ -57,8 +57,8 @@ BEGIN
             pQuantidadePresencas,
             pConteudo,
             1)
-        RETURNING id
-            INTO vId;
+    RETURNING id
+        INTO vId;
 
     RETURN json_build_object(
         'executionCode', 0,
@@ -97,7 +97,7 @@ Documentation
         1,
         null,
         null,
-        null,
+        '2018-10-20',
         null,
         null,
         10,
@@ -110,26 +110,46 @@ DECLARE
     vTotalLinhas INTEGER;
 BEGIN
     CREATE TEMPORARY TABLE TEMP AS
-        SELECT cp.id,
-               cp.semestre,
-               cp.nomeTurma      "nomeTurma",
-               cp.nomeDisciplina "nomeDisciplina",
-               cp.dataCadastro   "dataCadastro",
-               cp.idStatus       "idStatus",
-               s.descricao       status
+        SELECT
+            cp.id,
+            cp.semestre,
+            cp.nomeTurma      "nomeTurma",
+            cp.nomeDisciplina "nomeDisciplina",
+            cp.dataCadastro   "dataCadastro",
+            cp.idStatus       "idStatus",
+            s.descricao       status
         FROM Administracao.controlePresenca cp
-                 INNER JOIN Administracao.status s ON (s.id = cp.idStatus)
+            INNER JOIN Administracao.status s ON (s.id = cp.idStatus)
         WHERE cp.idProfessor = pIdProfessor
-          AND (pSemestre IS NULL OR cp.semestre = pSemestre)
-          AND (pIdDisciplina IS NULL OR cp.idDisciplina = pIdDisciplina)
-          AND (pDataInicial IS NULL OR cp.dataCadastro :: DATE >= pDataInicial)
-          AND (pDataFinal IS NULL OR cp.dataCadastro :: DATE <= pDataFinal)
-          AND (pStatus IS NULL OR cp.idStatus = pStatus)
+              AND (pSemestre IS NULL OR cp.semestre = pSemestre)
+              AND (
+                  CASE WHEN pDataInicial IS NULL
+                      THEN
+                          cp.dataCadastro :: DATE >= CURRENT_DATE
+                  ELSE
+                      cp.dataCadastro :: DATE >= pDataInicial
+                  END
+              )
+              AND (
+                  CASE WHEN pDataFinal IS NULL
+                      THEN
+                          cp.dataCadastro :: DATE <= CURRENT_DATE
+                  ELSE
+                      cp.dataCadastro :: DATE <= pDataFinal
+                  END
+              )
+              AND (pIdDisciplina IS NULL OR cp.idDisciplina = pIdDisciplina)
+              AND (pStatus IS NULL OR cp.idStatus = pStatus)
         ORDER BY cp.dataCadastro;
 
-    vTotalLinhas := (SELECT COUNT(id) FROM TEMP);
+    vTotalLinhas := (SELECT COUNT(id)
+                     FROM TEMP);
 
-    vRes := (SELECT json_agg(exp) FROM (SELECT * FROM TEMP LIMIT pLinhas OFFSET ((pPagina - 1) * pLinhas)) exp);
+    vRes := (SELECT json_agg(exp)
+             FROM (SELECT *
+                   FROM TEMP
+                   LIMIT pLinhas
+                   OFFSET ((pPagina - 1) * pLinhas)) exp);
 
     DROP TABLE IF EXISTS TEMP;
 
@@ -163,7 +183,9 @@ DECLARE
     vRes JSON;
 BEGIN
     IF NOT EXISTS(
-        SELECT 1 FROM Administracao.controlePresenca WHERE id = pId
+        SELECT 1
+        FROM Administracao.controlePresenca
+        WHERE id = pId
     )
     THEN
         RETURN jsonb_build_object(
@@ -173,31 +195,33 @@ BEGIN
     END IF;
 
     vRes := (SELECT row_to_json(result)
-             FROM (SELECT cp.id,
-                          cp.semestre,
-                          cp.idDisciplina                                   "idDisciplina",
-                          cp.idProfessor                                    "idProfessor",
-                          cp.nomeTurma                                      "nomeTurma",
-                          cp.nomeDisciplina                                 "nomeDisciplina",
-                          cp.horaAbertura                                   "horaAbertura",
-                          cp.horaFechamento                                 "horaFechamento",
-                          cp.quantidadePresencas                            "quantidadePresencas",
-                          cp.conteudo,
-                          cp.dataCadastro                                   "dataCadastro",
-                          cp.dataConfirmacao                                "dataConfirmacao",
-                          cp.idStatus                                       "idStatus",
-                          s.descricao,
-                          (SELECT COALESCE(json_agg(alunos), '[]')
-                           FROM (SELECT ap.idControlePresenca  "idControlePresenca",
-                                        ap.idAluno             "idAluno",
-                                        ap.nomeAluno           "nomeAluno",
-                                        ap.horaEntrada         "horaEntrada",
-                                        ap.horaSaida           "horaSaida",
-                                        ap.quantidadePresencas "quantidadePresencas"
-                                 FROM Administracao.alunoPresenca ap
-                                 WHERE ap.idControlePresenca = pId) alunos) alunos
+             FROM (SELECT
+                       cp.id,
+                       cp.semestre,
+                       cp.idDisciplina                                   "idDisciplina",
+                       cp.idProfessor                                    "idProfessor",
+                       cp.nomeTurma                                      "nomeTurma",
+                       cp.nomeDisciplina                                 "nomeDisciplina",
+                       cp.horaAbertura                                   "horaAbertura",
+                       cp.horaFechamento                                 "horaFechamento",
+                       cp.quantidadePresencas                            "quantidadePresencas",
+                       cp.conteudo,
+                       cp.dataCadastro                                   "dataCadastro",
+                       cp.dataConfirmacao                                "dataConfirmacao",
+                       cp.idStatus                                       "idStatus",
+                       s.descricao,
+                       (SELECT COALESCE(json_agg(alunos), '[]')
+                        FROM (SELECT
+                                  ap.idControlePresenca  "idControlePresenca",
+                                  ap.idAluno             "idAluno",
+                                  ap.nomeAluno           "nomeAluno",
+                                  ap.horaEntrada         "horaEntrada",
+                                  ap.horaSaida           "horaSaida",
+                                  ap.quantidadePresencas "quantidadePresencas"
+                              FROM Administracao.alunoPresenca ap
+                              WHERE ap.idControlePresenca = pId) alunos) alunos
                    FROM Administracao.controlePresenca cp
-                            INNER JOIN Administracao.status s ON (s.id = cp.idStatus)
+                       INNER JOIN Administracao.status s ON (s.id = cp.idStatus)
                    WHERE cp.id = pId) result);
 
     RETURN jsonb_build_object(
@@ -245,7 +269,9 @@ Documentation
 DECLARE
     vAluno JSON;
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM Administracao.controlePresenca WHERE id = pIdControle)
+    IF NOT EXISTS(SELECT 1
+                  FROM Administracao.controlePresenca
+                  WHERE id = pIdControle)
     THEN
         RETURN json_build_object(
             'executionCode', 1,
@@ -269,16 +295,19 @@ BEGIN
             dataConfirmacao = CURRENT_TIMESTAMP
         WHERE id = pIdControle;
     ELSE
-        UPDATE Administracao.controlePresenca SET conteudo = pConteudo WHERE id = pIdControle;
+        UPDATE Administracao.controlePresenca
+        SET conteudo = pConteudo
+        WHERE id = pIdControle;
     END IF;
 
 
-    FOR vAluno IN SELECT * FROM json_array_elements(pAlunos)
+    FOR vAluno IN SELECT *
+                  FROM json_array_elements(pAlunos)
     LOOP
         UPDATE Administracao.alunoPresenca
         SET quantidadePresencas = (vAluno ->> 'quantidadePresencas') :: INTEGER
         WHERE idControlePresenca = pIdControle
-          AND idAluno = (vAluno ->> 'idAluno') :: INTEGER;
+              AND idAluno = (vAluno ->> 'idAluno') :: INTEGER;
     END LOOP;
 
     RETURN json_build_object(
@@ -308,7 +337,9 @@ Documentation
 */
 
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM Administracao.controlePresenca WHERE id = pIdControle)
+    IF NOT EXISTS(SELECT 1
+                  FROM Administracao.controlePresenca
+                  WHERE id = pIdControle)
     THEN
         RETURN json_build_object(
             'exeutionCode', 1,
@@ -316,7 +347,9 @@ BEGIN
         );
     END IF;
 
-    UPDATE Administracao.controlePresenca SET idStatus = 4 WHERE id = pIdControle;
+    UPDATE Administracao.controlePresenca
+    SET idStatus = 4
+    WHERE id = pIdControle;
 
     RETURN json_build_object(
         'message', 'Controle de presença cancelado com sucesso'
@@ -345,7 +378,7 @@ BEGIN
     UPDATE Administracao.controlePresenca
     SET idStatus = 2
     WHERE idStatus = 1
-      AND (dataCadastro :: DATE || ' ' || horaFechamento) <= CURRENT_TIMESTAMP :: VARCHAR;
+          AND (dataCadastro :: DATE || ' ' || horaFechamento) <= CURRENT_TIMESTAMP :: VARCHAR;
 
     RETURN json_build_object(
         'message', 'OK'
@@ -373,8 +406,10 @@ Documentation
 */
 
 BEGIN
-    IF EXISTS(SELECT 1 FROM Administracao.controlePresenca WHERE idProfessor = pIdProfessor
-                                                             AND idStatus = 1
+    IF EXISTS(SELECT 1
+              FROM Administracao.controlePresenca
+              WHERE idProfessor = pIdProfessor
+                    AND idStatus = 1
     )
     THEN
         RETURN TRUE;
