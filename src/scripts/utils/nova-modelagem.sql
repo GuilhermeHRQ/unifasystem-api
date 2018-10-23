@@ -50,3 +50,13 @@ CREATE TABLE administracao.alunopresenca (
     CONSTRAINT pk_alunopresenca PRIMARY KEY (idcontrolepresenca, idaluno),
     CONSTRAINT fk_alunopresenca_idcontrolepresenca FOREIGN KEY (idcontrolepresenca) REFERENCES administracao.controlepresenca (id)
 );
+
+-- DROP TABLE seguranca.opcaomenu CASCADE;
+CREATE TABLE seguranca.opcaomenu (
+    id SERIAL,
+    idmae INTEGER,
+    url VARCHAR(100),
+    nome VARCHAR(30) CONSTRAINT nn_opcaomenu_nome NOT NULL,
+    CONSTRAINT pk_opcaomenu_id PRIMARY KEY (id),
+    CONSTRAINT fk_opcaomenu_idmae FOREIGN KEY (idmae) REFERENCES seguranca.opcaomenu(id)
+);

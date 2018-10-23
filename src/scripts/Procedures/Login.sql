@@ -37,7 +37,23 @@ BEGIN
                      ap.nome,
                      ap.email,
                      ap.ultimoLogin           "ultimoLogin",
-                     (ap.senha = md5(pSenha)) "senhaCorreta"
+                     (ap.senha = md5(pSenha)) "senhaCorreta",
+                     (
+                         CASE WHEN (ap.senha = md5(pSenha))
+                             THEN (
+                                 SELECT COALESCE(json_agg(opcoesJson), '[]')
+                                 FROM (
+                                          SELECT
+                                              opm.id,
+                                              opm.idMae,
+                                              opm.url,
+                                              opm.nome
+                                          FROM Seguranca.opcaoMenu opm
+                                          ORDER BY opm.nome
+                                      ) opcoesJson
+                             )
+                         END
+                     )                        "opcoes"
                  FROM Seguranca.acessoProfessor ap
                  WHERE ap.email = pLogin
              ) dados
@@ -93,12 +109,23 @@ BEGIN
                      ap.codigo,
                      ap.nome,
                      ap.email,
-                     ap.ultimoLogin "ultimoLogin"
+                     ap.ultimoLogin "ultimoLogin",
+                     (
+                         SELECT COALESCE(json_agg(opcoesJson), '[]')
+                         FROM (
+                                  SELECT
+                                      opm.id,
+                                      opm.idMae,
+                                      opm.url,
+                                      opm.nome
+                                  FROM Seguranca.opcaoMenu opm
+                                  ORDER BY opm.nome
+                              ) opcoesJson
+                     )              "opcoes"
                  FROM Seguranca.acessoProfessor ap
                  WHERE ap.id = pId
              ) dados
     );
-
     RETURN vRes;
 END;
 $$

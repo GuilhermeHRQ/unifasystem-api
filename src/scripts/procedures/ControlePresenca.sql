@@ -23,14 +23,14 @@ Documentation
 
     SELECT * FROM Administracao.InserirControlePresenca(
         2,
-        '4032-241',
+        '523-5456',
         1,
-        '2º SEM Engenharia de software',
-        'Produção de código',
-        '21:00' ::TIME,
-        '22:00' ::TIME,
+        'Capetinga pnc arobando',
+        'Produção de bug',
+        '19:00' ::TIME,
+        '20:00' ::TIME,
         2,
-        'Batata com arroz'
+        null
     );
 */
 DECLARE
