@@ -25,10 +25,10 @@ Documentation
         2,
         '523-5456',
         1,
-        'Capetinga pnc arobando',
+        '2º SEM Engenharia',
         'Produção de bug',
-        '19:00' ::TIME,
-        '20:00' ::TIME,
+        '21:00' ::TIME,
+        '22:00' ::TIME,
         2,
         null
     );
