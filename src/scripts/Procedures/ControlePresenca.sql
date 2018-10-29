@@ -419,3 +419,40 @@ BEGIN
 END;
 $$
 LANGUAGE PLPGSQL;
+
+SELECT public.DeletarFuncoes('Administracao', 'VerificaChamadasDisciplina');
+CREATE OR REPLACE FUNCTION Administracao.VerificaChamadasDisciplina(
+    pIdProfessor    INTEGER,
+    pIdDisciplina   VARCHAR,
+    pHoraAbertura   TIME,
+    pHoraFechamento TIME
+)
+    RETURNS BOOLEAN AS $$
+
+/*
+Documentation
+    Source............: ControlePresenca.sql
+    Objective.........: Verifica se o possui uma chamada em aberto para essa disciplina
+    Autor.............: Guilherme Henrique
+    Data..............: 21/10/2018
+    Ex................:
+
+    SELECT * FROM Administracao.VerificaChamadasProfessor(1);
+*/
+
+BEGIN
+    IF EXISTS(SELECT 1
+              FROM Administracao.controlePresenca
+              WHERE idProfessor = pIdProfessor
+                    AND idDisciplina = pIdDisciplina
+                    AND idStatus = 1
+                    AND (horaAbertura BETWEEN pHoraAbertura AND pHoraFechamento
+                         OR horaFechamento BETWEEN pHoraAbertura AND pHoraFechamento))
+    THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END;
+$$
+LANGUAGE PLPGSQL;
