@@ -23,12 +23,12 @@ Documentation
 
     SELECT * FROM Administracao.InserirControlePresenca(
         2,
-        '523-5456',
+        '5234-542',
         1,
-        '2º SEM Engenharia',
-        'Produção de bug',
-        '21:00' ::TIME,
-        '22:00' ::TIME,
+        '3º SEM Engenharia',
+        'Mario''s Discipline',
+        '19:00' ::TIME,
+        '20:00' ::TIME,
         2,
         null
     );
@@ -420,7 +420,7 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
-SELECT public.DeletarFuncoes('Administracao', 'VerificaChamadasDisciplina');
+/*SELECT public.DeletarFuncoes('Administracao', 'VerificaChamadasDisciplina');
 CREATE OR REPLACE FUNCTION Administracao.VerificaChamadasDisciplina(
     pIdProfessor    INTEGER,
     pIdDisciplina   VARCHAR,
@@ -455,4 +455,4 @@ BEGIN
     END IF;
 END;
 $$
-LANGUAGE PLPGSQL;
+LANGUAGE PLPGSQL;*/
