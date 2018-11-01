@@ -8,7 +8,7 @@ async function selecionarDisciplinaSimples(req, res) {
     try {
         const params = {
             codigoProfessor: req.token.codigoProfessor,
-            idCurso: req.query.idCurso
+            idTurma: req.query.idTurma
         };
 
         const data = await service.selecionarDisciplinaSimples(params.codigoProfessor);
@@ -18,8 +18,7 @@ async function selecionarDisciplinaSimples(req, res) {
         });
     } catch (error) {
         return res.finish({
-            httpCode: error.httpCode || 500,
-            error
+            httpCode: error.httpCode || 400,
         })
     }
 }

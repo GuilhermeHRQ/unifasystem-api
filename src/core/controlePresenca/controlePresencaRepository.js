@@ -14,6 +14,7 @@ async function inserir(params) {
     return db.json('Administracao.InserirControlePresenca', [
         params.semestre,
         params.idDisciplina,
+        params.idTurma,
         params.idProfessor,
         params.nomeTurma,
         params.nomeDisciplina,
@@ -29,6 +30,7 @@ async function selecionar(params) {
         params.idProfessor,
         params.semestre,
         params.idDisciplina,
+        params.idTurma,
         params.dataInicial,
         params.dataFinal,
         params.idStatus,

@@ -16,6 +16,10 @@ async function inserir(params) {
             required: true,
             notNull: true
         },
+        idTurma: {
+            required: true,
+            notNull: true
+        },
         idProfessor: {
             required: true,
             notNull: true,

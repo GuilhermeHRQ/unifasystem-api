@@ -16,7 +16,7 @@ CREATE TABLE seguranca.acessoprofessor (
 );
 
 CREATE TABLE administracao.status (
-    id   SERIAL,
+    id        SERIAL,
     descricao VARCHAR(30),
     CONSTRAINT pk_status_id PRIMARY KEY (id)
 );
@@ -24,8 +24,9 @@ CREATE TABLE administracao.status (
 CREATE TABLE administracao.controlepresenca (
     id                  SERIAL,
     semestre            INTEGER      CONSTRAINT nn_controlepresenca_semestre NOT NULL,
-    iddisciplina        VARCHAR(10)  CONSTRAINT nn_controlepresenca_iddisciplina NOT NULL,
+    iddisciplina        BIGINT       CONSTRAINT nn_controlepresenca_iddisciplina NOT NULL,
     idprofessor         INTEGER      CONSTRAINT nn_controlepresenca_idprofessor NOT NULL,
+    idturma             INTEGER      CONSTRAINT nn_controlepresenca_idturma NOT NULL,
     nometurma           VARCHAR(100) CONSTRAINT nn_controlepresenca_nometurma NOT NULL,
     nomedisciplina      VARCHAR(100) CONSTRAINT nn_controlepresenca_nomedisciplina NOT NULL,
     horaabertura        TIME         CONSTRAINT nn_controlepresenca_horaabertura NOT NULL,
@@ -53,10 +54,10 @@ CREATE TABLE administracao.alunopresenca (
 
 -- DROP TABLE seguranca.opcaomenu CASCADE;
 CREATE TABLE seguranca.opcaomenu (
-    id SERIAL,
+    id    SERIAL,
     idmae INTEGER,
-    url VARCHAR(100),
-    nome VARCHAR(30) CONSTRAINT nn_opcaomenu_nome NOT NULL,
+    url   VARCHAR(100),
+    nome  VARCHAR(30) CONSTRAINT nn_opcaomenu_nome NOT NULL,
     CONSTRAINT pk_opcaomenu_id PRIMARY KEY (id),
-    CONSTRAINT fk_opcaomenu_idmae FOREIGN KEY (idmae) REFERENCES seguranca.opcaomenu(id)
+    CONSTRAINT fk_opcaomenu_idmae FOREIGN KEY (idmae) REFERENCES seguranca.opcaomenu (id)
 );

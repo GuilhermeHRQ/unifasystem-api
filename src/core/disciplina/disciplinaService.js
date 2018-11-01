@@ -15,12 +15,16 @@ async function selecionarDisciplinaSimples(params) {
         });
 
         res.forEach(item => {
-            data.push({
-                id: item.id_disciplina,
-                nome: item.nome_curso,
-                turno: item.nome_turno
-            })
-        })
+            if(item.id_serie == params.idTurma) {
+                data.push({
+                    id: item.id_disciplina,
+                    nome: item.nome_disciplina,
+                    serie: item.nome_serie
+                });
+            }
+        });
+
+        return data;
     } catch (error) {
         throw error;
     }
