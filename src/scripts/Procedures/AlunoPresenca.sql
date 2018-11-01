@@ -1,35 +1,33 @@
-SELECT public.DeletarFuncoes('Administracao', 'VerificarChamadaDisciplinaAberta');
-CREATE OR REPLACE FUNCTION Administracao.VerificarChamadaDisciplinaAberta(
-    pDisciplinas TEXT[]
+SELECT public.DeletarFuncoes('Administracao', 'VerificarChamadaAbertaTurma');
+CREATE OR REPLACE FUNCTION Administracao.VerificarChamadaAbertaTurma(
+    pIdTurma INTEGER
 )
-    RETURNS JSON AS $$
+    RETURNS BOOLEAN AS $$
 
 /*
     Documentation
     Source............: AlunoPresenca.sql
-    Objective.........: Verifica se existe uma chamada em aberto, para alguma das disciplinas as quais o aluno tem acesso
+    Objective.........: Verifica se existe uma chamada em aberto, para a turma do aluno
     Autor.............: Guilherme Henrique
-    Data..............: 23/10/2018
+    Data..............: 01/11/2018
     Ex................:
 
-    SELECT * FROM Administracao.VerificarChamadaDisciplinaAberta(
-        '{"4032-241", "207-5465"}' ::TEXT[]
+    SELECT * FROM Administracao.VerificarChamadaAbertaTurma(
+        237
     );
 */
 
-DECLARE
-    vIdControlePresenca INTEGER;
-
 BEGIN
-    vIdControlePresenca := (SELECT cp.id
-                            FROM Administracao.controlePresenca cp
-                            WHERE cp.idDisciplina = ANY(pDisciplinas)
-                              AND cp.idStatus = 1);
 
-    RETURN json_build_object(
-        'executionCode', iif(vIdControlePresenca IS NOT NULL, 0, 1),
-        'content', vIdControlePresenca
-    );
+    IF EXISTS(SELECT 1
+              FROM Administracao.controlePresenca cp
+              WHERE cp.idStatus = 1
+                AND cp.idTurma = pIdTurma)
+        THEN
+        RETURN TRUE;
+    END IF;
+
+    RETURN FALSE;
 END;
 $$
 LANGUAGE PLPGSQL;
