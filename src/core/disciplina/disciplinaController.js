@@ -1,17 +1,17 @@
 const service = require('./disciplinaService');
 
 module.exports = {
-    selecionarDisciplinaSimples
+    selecionar
 };
 
-async function selecionarDisciplinaSimples(req, res) {
+async function selecionar(req, res) {
     try {
         const params = {
             codigoProfessor: req.token.codigoProfessor,
-            idTurma: req.query.idTurma
+            idTurma: req.query.idTurma || null
         };
 
-        const data = await service.selecionarDisciplinaSimples(params.codigoProfessor);
+        const data = await service.selecionar(params);
 
         return res.finish({
             content: data

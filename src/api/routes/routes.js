@@ -27,6 +27,12 @@ module.exports = {
                 method: 'GET',
                 url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/selecionar-status-simples`
             }
+        },
+        disciplina: {
+            selecionar: {
+                method: 'GET',
+                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/disciplina`
+            }
         }
     },
     seguranca: {

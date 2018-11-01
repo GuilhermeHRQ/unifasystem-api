@@ -41,14 +41,14 @@ async function selecionar(req, res) {
     try {
         const params = {
             idProfessor: req.token.idUsuario,
-            semestre: req.body.semestre || null,
-            idDisciplina: req.body.idDisciplina || null,
-            idTurma: req.body.idTurma || null,
-            dataInicial: req.body.dataInicial || null,
-            dataFinal: req.body.dataFinal || null,
-            idStatus: req.body.idStatus || null,
-            linhas: req.body.linhas || 10,
-            pagina: req.body.pagina || 1
+            semestre: req.query.semestre || null,
+            idDisciplina: req.query.idDisciplina || null,
+            idTurma: req.query.idTurma || null,
+            dataInicial: req.query.dataInicial || null,
+            dataFinal: req.query.dataFinal || null,
+            idStatus: req.query.idStatus || null,
+            linhas: req.query.linhas || 10,
+            pagina: req.query.pagina || 1
         };
 
         const data = await service.selecionar(params);
