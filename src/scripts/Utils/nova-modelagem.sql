@@ -24,7 +24,7 @@ CREATE TABLE administracao.status (
 CREATE TABLE administracao.controlepresenca (
     id                  SERIAL,
     semestre            INTEGER      CONSTRAINT nn_controlepresenca_semestre NOT NULL,
-    iddisciplina        BIGINT       CONSTRAINT nn_controlepresenca_iddisciplina NOT NULL,
+    iddisciplina        INTEGER       CONSTRAINT nn_controlepresenca_iddisciplina NOT NULL,
     idprofessor         INTEGER      CONSTRAINT nn_controlepresenca_idprofessor NOT NULL,
     idturma             INTEGER      CONSTRAINT nn_controlepresenca_idturma NOT NULL,
     nometurma           VARCHAR(100) CONSTRAINT nn_controlepresenca_nometurma NOT NULL,

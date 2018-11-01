@@ -9,15 +9,14 @@ module.exports = {
 };
 
 async function inserir(params) {
-    const chamadaAberta = await repository.verificaChamadasProfessor(params);
+    const chamadaAberta = await repository.verificarChamadaTurma(params);
 
     if(chamadaAberta) {
         throw {
-            message: 'Você possui uma chamada em aberto que deve ser fechada para poder adicionar outra',
+            message: 'Já existe uma chamada em aberto para esta turma',
             httpCode: 401
         }
     }
-
     return await repository.inserir(params);
 }
 

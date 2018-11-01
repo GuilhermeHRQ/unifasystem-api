@@ -374,29 +374,34 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
--- VerificaChamadasProfessor
-SELECT public.DeletarFuncoes('Administracao', 'VerificaChamadasProfessor');
-CREATE OR REPLACE FUNCTION Administracao.VerificaChamadasProfessor(
-    pIdProfessor INTEGER
-)
-    RETURNS BOOLEAN AS $$
+/* TODO
+*
+* Fazer verificação pelo horario da chamada, permitir que sejam abertas várias chamadas para a mesma turma
+* desde que não sejam no mesmo horário
+*/
+
+-- VerificarChamadaTurma
+SELECT public.DeletarFuncoes('Administracao', 'VerificarChamadaTurma');
+CREATE OR REPLACE FUNCTION Administracao.VerificarChamadaTurma(
+    pIdTurma INTEGER
+) RETURNS BOOLEAN AS $$
 
 /*
 Documentation
     Source............: ControlePresenca.sql
-    Objective.........: Verifica se o professor possui chamadas em aberto
+    Objective.........: Verificar se já existe alguma chamada em aberto para uma determinada turma
     Autor.............: Guilherme Henrique
-    Data..............: 21/10/2018
+    Data..............: 01/11/2018
     Ex................:
 
-    SELECT * FROM Administracao.VerificaChamadasProfessor(1);
+    SELECT * FROM Administracao.VerificarChamadaTurma(35);
 */
 
 BEGIN
-    IF EXISTS(SELECT 1 FROM Administracao.controlePresenca WHERE idProfessor = pIdProfessor
-                                                             AND idStatus = 1
-    )
-    THEN
+    IF EXISTS(SELECT 1 FROM Administracao.controlePresenca cp
+              WHERE cp.idTurma = pIdTurma
+              AND cp.idStatus = 1)
+        THEN
         RETURN TRUE;
     END IF;
 
@@ -405,39 +410,3 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
-/*SELECT public.DeletarFuncoes('Administracao', 'VerificaChamadasDisciplina');
-CREATE OR REPLACE FUNCTION Administracao.VerificaChamadasDisciplina(
-    pIdProfessor    INTEGER,
-    pIdDisciplina   VARCHAR,
-    pHoraAbertura   TIME,
-    pHoraFechamento TIME
-)
-    RETURNS BOOLEAN AS $$
-
-/*
-Documentation
-    Source............: ControlePresenca.sql
-    Objective.........: Verifica se o possui uma chamada em aberto para essa disciplina
-    Autor.............: Guilherme Henrique
-    Data..............: 21/10/2018
-    Ex................:
-
-    SELECT * FROM Administracao.VerificaChamadasProfessor(1);
-*/
-
-BEGIN
-    IF EXISTS(SELECT 1
-              FROM Administracao.controlePresenca
-              WHERE idProfessor = pIdProfessor
-                    AND idDisciplina = pIdDisciplina
-                    AND idStatus = 1
-                    AND (horaAbertura BETWEEN pHoraAbertura AND pHoraFechamento
-                         OR horaFechamento BETWEEN pHoraAbertura AND pHoraFechamento))
-    THEN
-        RETURN TRUE;
-    ELSE
-        RETURN FALSE;
-    END IF;
-END;
-$$
-LANGUAGE PLPGSQL;*/

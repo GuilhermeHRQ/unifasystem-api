@@ -7,7 +7,7 @@ module.exports = {
     atualizar,
     cancelarControlePresenca,
     fecharControlesPresenca,
-    verificaChamadasProfessor
+    verificarChamadaTurma
 };
 
 async function inserir(params) {
@@ -60,12 +60,12 @@ async function cancelarControlePresenca(params) {
     ]);
 }
 
-async function fecharControlesPresenca(params) {
+async function fecharControlesPresenca() {
     return db.json('Administracao.FecharControlesPresenca', []);
 }
 
-async function verificaChamadasProfessor(params) {
-    return db.json('Administracao.VerificaChamadasProfessor', [
-        params.idProfessor
+async function verificarChamadaTurma(params) {
+    return db.json('Administracao.VerificarChamadaTurma', [
+        params.idTurma
     ]);
 }
