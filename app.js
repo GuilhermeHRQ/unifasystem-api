@@ -6,8 +6,10 @@ const app = express();
 const body = require('body-parser');
 const cors = require('./src/api/middleware/cors');
 const response = require('./src/api/middleware/response');
+
 require('./settings/db');
 require('./src/helpers/auth');
+require('./settings/environment');
 
 global.config = {
     host: process.env.HOST || 'http://localhost',

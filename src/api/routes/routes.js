@@ -33,6 +33,12 @@ module.exports = {
                 method: 'GET',
                 url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/disciplina`
             }
+        },
+        turma: {
+            selecionar: {
+                method: 'GET',
+                url: `${global.config.host}${global.config.isProduction ? '' : `:${global.config.port}`}/turma`
+            }
         }
     },
     seguranca: {

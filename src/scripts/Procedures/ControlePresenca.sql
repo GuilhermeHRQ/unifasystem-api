@@ -1,4 +1,3 @@
--- InserirControlePresenca
 SELECT public.DeletarFuncoes('Administracao', 'InserirControlePresenca');
 CREATE OR REPLACE FUNCTION Administracao.InserirControlePresenca(
     pSemestre            INTEGER,
@@ -75,7 +74,6 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
--- SelecionarControlePresenca
 SELECT public.DeletarFuncoes('Administracao', 'SelecionarControlePresenca');
 CREATE OR REPLACE FUNCTION Administracao.SelecionarControlePresenca(
     pIdProfessor  INTEGER,
@@ -160,7 +158,6 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
--- SelecionarControlePresencaPorId
 SELECT public.DeletarFuncoes('Administracao', 'SelecionarControlePresencaPorId');
 CREATE OR REPLACE FUNCTION Administracao.SelecionarControlePresencaPorId(
     pId INTEGER
@@ -175,7 +172,7 @@ Documentation
     Data..............: 21/10/2018
     Ex................:
 
-    SELECT * FROM Administracao.SelecionarControlePresencaPorId(10);
+    SELECT * FROM Administracao.SelecionarControlePresencaPorId(29);
 */
 
 DECLARE
@@ -227,7 +224,6 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
--- AtualizarControlePresenca
 SELECT public.DeletarFuncoes('Administracao', 'AtualizarControlePresenca');
 CREATE OR REPLACE FUNCTION Administracao.AtualizarControlePresenca(
     pIdControle        INTEGER,
@@ -309,7 +305,6 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
--- CancelarControlePresenca
 SELECT public.DeletarFuncoes('Administracao', 'CancelarControlePresenca');
 CREATE OR REPLACE FUNCTION Administracao.CancelarControlePresenca(
     pIdControle INTEGER
@@ -345,7 +340,6 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
--- FecharControlesPresenca
 SELECT public.DeletarFuncoes('Administracao', 'FecharControlesPresenca');
 CREATE OR REPLACE FUNCTION Administracao.FecharControlesPresenca()
     RETURNS JSON AS $$
@@ -380,7 +374,6 @@ LANGUAGE PLPGSQL;
 * desde que não sejam no mesmo horário
 */
 
--- VerificarChamadaTurma
 SELECT public.DeletarFuncoes('Administracao', 'VerificarChamadaTurma');
 CREATE OR REPLACE FUNCTION Administracao.VerificarChamadaTurma(
     pIdTurma INTEGER
@@ -409,4 +402,3 @@ BEGIN
 END;
 $$
 LANGUAGE PLPGSQL;
-

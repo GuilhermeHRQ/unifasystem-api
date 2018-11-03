@@ -1,20 +1,20 @@
-const service = require('./turmaService');
+const service = require('./alunoPresencaService');
 
 module.exports = {
-    selecionar
+    inserirPresenca
 };
 
-async function selecionar(req, res) {
+async function inserirPresenca(req, res) {
     try {
         const params = {
-            codigoProfessor: req.token.codigoProfessor
+            idAluno: req.params.idAluno
         };
 
-        const data = await service.selecionar(params);
+        const data = await service.inserirPresenca(params);
 
         return res.finish({
             content: data
-        });
+        })
     } catch (error) {
         return res.finish({
             httpCode: error.httpCode || 500,

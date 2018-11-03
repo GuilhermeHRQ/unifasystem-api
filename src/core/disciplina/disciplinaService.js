@@ -1,4 +1,5 @@
 const request = require('request-promise');
+const apiFacef = global.apiFacef;
 
 module.exports = {
     selecionar
@@ -9,7 +10,7 @@ async function selecionar(params) {
         let data = [];
 
         let res =  await request({
-            url: `http://dev2.unifacef.com.br:8000/api/disciplinaDocente/${params.codigoProfessor}`,
+            url: `${apiFacef.disciplinasDocente}${params.codigoProfessor}`,
             method: 'GET',
             json: true
         });
