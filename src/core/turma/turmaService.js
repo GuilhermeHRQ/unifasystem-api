@@ -28,7 +28,8 @@ async function selecionar(params) {
             if(inserir) {
                 data.push({
                     id: r.id_serie,
-                    nome: `${r.nome_serie} ${r.nome_curso}`
+                    nome: `${r.nome_serie} ${r.nome_curso}`,
+                    semestre: r.nome_serie.trim().substring(0, 1)
                 });
             }
         });

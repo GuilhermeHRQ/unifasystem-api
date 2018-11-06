@@ -48,7 +48,8 @@ BEGIN
                                                 horaFechamento,
                                                 quantidadePresencas,
                                                 conteudo,
-                                                idStatus)
+                                                idStatus,
+                                                dataCadastro)
     VALUES (pSemestre,
             pIdDisciplina,
             pIdTurma,
@@ -59,7 +60,8 @@ BEGIN
             pHoraFecahamento,
             pQuantidadePresencas,
             pConteudo,
-            1)
+            1,
+            CURRENT_TIMESTAMP)
         RETURNING id
             INTO vId;
 
@@ -142,7 +144,7 @@ BEGIN
           AND (pIdDisciplina IS NULL OR cp.idDisciplina = pIdDisciplina)
           AND (pIdTurma IS NULL OR cp.idTurma = pIdTurma)
           AND (pStatus IS NULL OR cp.idStatus = pStatus)
-        ORDER BY cp.dataCadastro;
+        ORDER BY cp.dataCadastro DESC;
 
     vTotalLinhas := (SELECT COUNT(id) FROM TEMP);
 
@@ -340,6 +342,8 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
+SET TIME ZONE 'UTC+3';
+
 SELECT public.DeletarFuncoes('Administracao', 'FecharControlesPresenca');
 CREATE OR REPLACE FUNCTION Administracao.FecharControlesPresenca()
     RETURNS JSON AS $$
@@ -359,7 +363,7 @@ BEGIN
     UPDATE Administracao.controlePresenca
     SET idStatus = 2
     WHERE idStatus = 1
-      AND (dataCadastro :: DATE || ' ' || horaFechamento) <= CURRENT_TIMESTAMP :: VARCHAR;
+      AND (dataCadastro :: DATE || ' ' || horaFechamento) ::TIMESTAMP <= CURRENT_TIMESTAMP;
 
     RETURN json_build_object(
         'message', 'OK'

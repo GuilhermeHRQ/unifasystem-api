@@ -10,6 +10,8 @@ const response = require('./src/api/middleware/response');
 require('./settings/db');
 require('./src/helpers/auth');
 require('./settings/environment');
+require('./src/helpers/schedule');
+
 
 global.config = {
     host: process.env.HOST || 'http://localhost',
@@ -29,7 +31,7 @@ consign
         .into(app);
 
 app.listen(global.config.port, () => {
-    console.log(`Server online on port ${global.config.port}`);
+    console.log(`${new Date} - Server online on port ${global.config.port}`);
 });
 
 module.exports = app;

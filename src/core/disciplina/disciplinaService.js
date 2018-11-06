@@ -22,7 +22,7 @@ async function selecionar(params) {
                 data.push({
                     id: item.id_disciplina,
                     nome: item.nome_disciplina,
-                    serie: item.nome_serie
+                    semestre: item.nome_serie
                 });
             }
         });
