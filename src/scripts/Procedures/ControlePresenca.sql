@@ -1,3 +1,5 @@
+SELECT CURRENT_TIMESTAMP;
+
 SELECT public.DeletarFuncoes('Administracao', 'InserirControlePresenca');
 CREATE OR REPLACE FUNCTION Administracao.InserirControlePresenca(
     pSemestre            INTEGER,
@@ -34,6 +36,7 @@ Documentation
         null
     );
 */
+
 DECLARE
     vId INTEGER;
 

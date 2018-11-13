@@ -3,6 +3,15 @@ DROP TABLE IF EXISTS Administracao.controlePresenca;
 DROP TABLE IF EXISTS Administracao.status;
 DROP TABLE IF EXISTS Seguranca.acessoProfessor;
 
+-- CREATE DATABASE unifasystem
+--     ENCODING 'UTF-8'
+--     TEMPLATE = TEMPLATE0
+--     CONNECTION LIMIT 100;
+
+CREATE SCHEMA IF NOT EXISTS Administracao;
+CREATE SCHEMA IF NOT EXISTS Seguranca;
+
+
 CREATE TABLE seguranca.acessoprofessor (
     id          SERIAL,
     codigo      INTEGER      CONSTRAINT nn_acessoprofessor_codigo NOT NULL,

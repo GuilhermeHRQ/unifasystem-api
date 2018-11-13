@@ -1,5 +1,4 @@
-'use strict';
-
+process.env.TZ = 'America/Sao_Paulo';
 const consign = require('consign')({verbose: false});
 const express = require('express');
 const app = express();
