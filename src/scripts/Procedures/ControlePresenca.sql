@@ -177,7 +177,7 @@ Documentation
     Data..............: 21/10/2018
     Ex................:
 
-    SELECT * FROM Administracao.SelecionarControlePresencaPorId(29);
+    SELECT * FROM Administracao.SelecionarControlePresencaPorId(16);
 */
 
 DECLARE
@@ -215,7 +215,7 @@ BEGIN
                                         ap.nomeAluno           "nomeAluno",
                                         ap.horaEntrada         "horaEntrada",
                                         ap.horaSaida           "horaSaida",
-                                        ap.quantidadePresencas "quantidadePresencas"
+                                        ap.presencas           "presencas"
                                  FROM Administracao.alunoPresenca ap
                                  WHERE ap.idControlePresenca = pId) alunos) alunos
                    FROM Administracao.controlePresenca cp
@@ -247,19 +247,15 @@ Documentation
     Ex................:
 
     SELECT * FROM Administracao.AtualizarControlePresenca(
-        2,
+        16,
         'Batatinha quando nasce espalha a rama pelo chão.',
         '[
             {
                 "idAluno": 20245,
-                "quantidadePresencas": 1
-            },
-            {
-                "idAluno": 2000,
-                "quantidadePresencas": 2
+                "presencas": "{true, false}"
             }
         ]' ::JSON,
-        1
+        false
     );
 */
 
@@ -297,7 +293,7 @@ BEGIN
     FOR vAluno IN SELECT * FROM json_array_elements(pAlunos)
     LOOP
         UPDATE Administracao.alunoPresenca
-        SET quantidadePresencas = (vAluno ->> 'quantidadePresencas') :: INTEGER
+        SET presencas = (vAluno ->> 'presencas') :: BOOLEAN[]
         WHERE idControlePresenca = pIdControle
           AND idAluno = (vAluno ->> 'idAluno') :: INTEGER;
     END LOOP;
@@ -344,8 +340,6 @@ BEGIN
 END;
 $$
 LANGUAGE PLPGSQL;
-
-SET TIME ZONE 'UTC+3';
 
 SELECT public.DeletarFuncoes('Administracao', 'FecharControlesPresenca');
 CREATE OR REPLACE FUNCTION Administracao.FecharControlesPresenca()
@@ -400,7 +394,7 @@ Documentation
 BEGIN
     IF EXISTS(SELECT 1 FROM Administracao.controlePresenca cp
               WHERE cp.idTurma = pIdTurma
-              AND cp.idStatus = 1)
+                AND cp.idStatus = 1)
         THEN
         RETURN TRUE;
     END IF;

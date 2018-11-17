@@ -1,7 +1,7 @@
 /*
 * TODO
 * Alunos que não fazem determinadas aulas, estão na mesma turma?
-* Receber array de disciplinas, e verficiar turma e disciplina aberta
+* Receber array de disciplinas, e verficiar turma e disciplina aberta!!!!
 */
 
 /*SELECT public.DeletarFuncoes('Administracao', 'VerificarChamadaAbertaTurma');
@@ -61,14 +61,15 @@ CREATE OR REPLACE FUNCTION Administracao.InserirPresencaAluno(
 
     SELECT * FROM Administracao.InserirPresencaAluno(
         237,
-        20245,
-        'Jamal'
+        1522,
+        'Freii'
     );
 */
 
 DECLARE
     vOcorrencia INTEGER;
-
+    vIndex INTEGER;
+    vArrayAux BOOLEAN[];
 BEGIN
     IF NOT EXISTS(SELECT 1
                   FROM Administracao.controlePresenca cp
@@ -106,20 +107,29 @@ BEGIN
     IF NOT EXISTS(SELECT idAluno
                   FROM TAlunoPresenca)
     THEN
+
+        -- GERA O ARRAY PARA JOGAR PRESENÇAS PARA O ALUNO
+        vIndex := 0;
+
+        LOOP
+            vArrayAux = array_append(vArrayAux, TRUE);
+            vIndex := vIndex + 1;
+            EXIT WHEN vIndex = (SELECT quantidadePresencas FROM TControlePresenca);
+        END LOOP ;
+
         INSERT INTO Administracao.alunoPresenca (
             idControlePresenca,
             idAluno,
             nomeAluno,
             horaEntrada,
-            quantidadePresencas)
+            presencas)
         VALUES (
             (SELECT id
              FROM TControlePresenca),
             pIdAluno,
             pNomeAluno,
             CURRENT_TIME,
-            (SELECT quantidadePresencas
-             FROM TControlePresenca)
+            vArrayAux
         );
         vOcorrencia := 1;
     ELSE
@@ -148,9 +158,18 @@ BEGIN
                     SET horaSaida = CURRENT_TIME :: TIME WITHOUT TIME ZONE
                     WHERE idAluno = pIdAluno;
                 ELSE
+                    -- GERA O ARRAY PARA JOGAR PRESENÇAS PARA O ALUNO
+                    vIndex := 0;
+
+                    LOOP
+                        vArrayAux = array_append(vArrayAux, FALSE);
+                        vIndex := vIndex + 1;
+                        EXIT WHEN vIndex = (SELECT quantidadePresencas FROM TControlePresenca);
+                    END LOOP ;
+
                     UPDATE Administracao.alunoPresenca
                     SET horaSaida           = CURRENT_TIME :: TIME WITHOUT TIME ZONE,
-                        quantidadePresencas = 0
+                        presencas           = vArrayAux
                     WHERE idAluno = pIdAluno;
                 END IF;
 
@@ -169,7 +188,7 @@ BEGIN
         THEN
             RETURN json_build_object(
                 'executionCode', 0,
-                'message', 'Presença confirmada às ' || (SELECT NOW() :: TIME WITHOUT TIME ZONE)
+                'message', 'Presença confirmada às ' || (SELECT date_part('hours', now()) || ':' || date_part('minutes', now()))
             );
         WHEN 2
         THEN
@@ -181,7 +200,7 @@ BEGIN
         THEN
             RETURN json_build_object(
                 'executionCode', 1,
-                'message', 'Saída confirmada às ' || (SELECT NOW() :: TIME WITHOUT TIME ZONE)
+                'message', 'Saída confirmada às ' || (SELECT date_part('hours', now()) || ':' || date_part('minutes', now()))
             );
         WHEN 4
         THEN

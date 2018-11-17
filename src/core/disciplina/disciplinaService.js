@@ -18,11 +18,10 @@ async function selecionar(params) {
         let filtrar = params.idTurma === null;
 
         res.forEach(item => {
-            if(filtrar || item.id_serie == params.idTurma) {
+            if(filtrar || item.id_serie === params.idTurma) {
                 data.push({
                     id: item.id_disciplina,
-                    nome: item.nome_disciplina,
-                    semestre: item.nome_serie
+                    nome: item.nome_disciplina
                 });
             }
         });
