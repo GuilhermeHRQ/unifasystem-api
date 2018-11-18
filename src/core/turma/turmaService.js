@@ -19,7 +19,7 @@ async function selecionar(params) {
             let inserir = true;
             for(let i = 0; i < data.length; i++) {
                 let itemAtual = data[i];
-                if (r.id_serie === itemAtual.id) {
+                if (r.id_serie == itemAtual.id) {
                     inserir = false;
                     break;
                 }
