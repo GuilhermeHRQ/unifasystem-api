@@ -7,7 +7,7 @@ async function startSchedule()  {
 
 async function fechamentoControlesPresenca() {
     const functionName = arguments.callee.name;
-    const cron = '* 5 * * * *';
+    const cron = '30 * * * * *';
 
     console.log(`Schedule "${functionName}" started. Repeating by the CRON rule: ${cron}`);
 

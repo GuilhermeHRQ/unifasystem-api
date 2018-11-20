@@ -128,13 +128,13 @@ BEGIN
              FROM TControlePresenca),
             pIdAluno,
             pNomeAluno,
-            CURRENT_TIME,
+            CURRENT_TIME - '2 hours' ::INTERVAL,
             vArrayAux
         );
         vOcorrencia := 1;
     ELSE
         -- CASO SIM, VERIFICA SE ELE JÁ FEZ PASSOU O CARTÃO PARA SAIDA
-        IF ((SELECT CURRENT_TIME ::TIME - (SELECT horaEntrada
+        IF ((SELECT ((CURRENT_TIME ::TIME) - '2 hours' ::INTERVAL) - (SELECT horaEntrada
                                      FROM TAlunoPresenca)) < ('5 minutes' :: INTERVAL)) IS TRUE
         THEN
             vOcorrencia := 2;
@@ -151,11 +151,11 @@ BEGIN
                          FROM TControlePresenca),
                         (SELECT horaEntrada
                          FROM TAlunoPresenca),
-                        CURRENT_TIME :: TIME WITHOUT TIME ZONE
+                        (CURRENT_TIME - '2 hours' ::INTERVAL) ::TIME
                     )) IS TRUE
                 THEN
                     UPDATE Administracao.alunoPresenca
-                    SET horaSaida = CURRENT_TIME :: TIME WITHOUT TIME ZONE
+                    SET horaSaida = CURRENT_TIME - '2 hours' ::INTERVAL
                     WHERE idAluno = pIdAluno;
                 ELSE
                     -- GERA O ARRAY PARA JOGAR PRESENÇAS PARA O ALUNO
@@ -168,7 +168,7 @@ BEGIN
                     END LOOP ;
 
                     UPDATE Administracao.alunoPresenca
-                    SET horaSaida           = CURRENT_TIME :: TIME WITHOUT TIME ZONE,
+                    SET horaSaida           = CURRENT_TIME - '2 hours' ::INTERVAL,
                         presencas           = vArrayAux
                     WHERE idAluno = pIdAluno;
                 END IF;
@@ -188,7 +188,7 @@ BEGIN
         THEN
             RETURN json_build_object(
                 'executionCode', 0,
-                'message', 'Presença confirmada às ' || (SELECT date_part('hours', now()) || ':' || date_part('minutes', now()))
+                'message', 'Presença confirmada às ' || (SELECT date_part('hours', now()) || ':' || date_part('minutes', now()) || date_part('seconds', now())) ::TIME - '2 hours' ::INTERVAL
             );
         WHEN 2
         THEN
@@ -200,7 +200,7 @@ BEGIN
         THEN
             RETURN json_build_object(
                 'executionCode', 1,
-                'message', 'Saída confirmada às ' || (SELECT date_part('hours', now()) || ':' || date_part('minutes', now()))
+                'message', 'Saída confirmada às ' || (SELECT date_part('hours', now()) || ':' || date_part('minutes', now()) || date_part('seconds', now())) ::TIME - '2 hours' ::INTERVAL
             );
         WHEN 4
         THEN

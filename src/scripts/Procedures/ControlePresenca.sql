@@ -64,7 +64,7 @@ BEGIN
             pQuantidadePresencas,
             pConteudo,
             1,
-            CURRENT_TIMESTAMP)
+            CURRENT_TIMESTAMP - ('2 hours' ::INTERVAL))
         RETURNING id
             INTO vId;
 
@@ -133,14 +133,14 @@ BEGIN
           AND (
                   CASE
                       WHEN pDataInicial IS NULL
-                            THEN cp.dataCadastro :: DATE >= CURRENT_DATE
+                            THEN cp.dataCadastro :: DATE >= (CURRENT_TIMESTAMP - '2 hours' ::INTERVAL) ::DATE
                       ELSE cp.dataCadastro :: DATE >= pDataInicial
                       END
                   )
           AND (
                   CASE
                       WHEN pDataFinal IS NULL
-                            THEN cp.dataCadastro :: DATE <= CURRENT_DATE
+                            THEN cp.dataCadastro :: DATE <= (CURRENT_TIMESTAMP - '2 hours' ::INTERVAL) ::DATE
                       ELSE cp.dataCadastro :: DATE <= pDataFinal
                       END
                   )
@@ -247,12 +247,12 @@ Documentation
     Ex................:
 
     SELECT * FROM Administracao.AtualizarControlePresenca(
-        16,
+        21,
         'Batatinha quando nasce espalha a rama pelo chão.',
         '[
             {
-                "idAluno": 20245,
-                "presencas": "{true, false}"
+                "idAluno": 1522,
+                "presencas": "[true, false]"
             }
         ]' ::JSON,
         false
@@ -283,7 +283,7 @@ BEGIN
         UPDATE Administracao.controlePresenca
         SET conteudo        = pConteudo,
             idStatus        = 3,
-            dataConfirmacao = CURRENT_TIMESTAMP
+            dataConfirmacao = CURRENT_TIMESTAMP - '2 hours' ::INTERVAL
         WHERE id = pIdControle;
     ELSE
         UPDATE Administracao.controlePresenca SET conteudo = pConteudo WHERE id = pIdControle;
@@ -293,9 +293,9 @@ BEGIN
     FOR vAluno IN SELECT * FROM json_array_elements(pAlunos)
     LOOP
         UPDATE Administracao.alunoPresenca
-        SET presencas = (vAluno ->> 'presencas') :: BOOLEAN[]
+        SET presencas = (SELECT ARRAY(SELECT json_array_elements_text((vAluno ->> 'presencas') ::JSON) ::BOOLEAN))
         WHERE idControlePresenca = pIdControle
-          AND idAluno = (vAluno ->> 'idAluno') :: INTEGER;
+          AND idAluno = (vAluno ->> 'idAluno') ::INTEGER;
     END LOOP;
 
     RETURN json_build_object(
@@ -360,7 +360,7 @@ BEGIN
     UPDATE Administracao.controlePresenca
     SET idStatus = 2
     WHERE idStatus = 1
-      AND (dataCadastro :: DATE || ' ' || horaFechamento) ::TIMESTAMP <= CURRENT_TIMESTAMP;
+      AND (dataCadastro :: DATE || ' ' || horaFechamento) ::TIMESTAMP <= CURRENT_TIMESTAMP - '2 hours' ::INTERVAL;
 
     RETURN json_build_object(
         'message', 'OK'
