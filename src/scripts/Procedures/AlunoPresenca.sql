@@ -188,7 +188,7 @@ BEGIN
         THEN
             RETURN json_build_object(
                 'executionCode', 0,
-                'message', 'Presença confirmada às ' || (SELECT date_part('hours', now()) || ':' || date_part('minutes', now()) || date_part('seconds', now())) ::TIME - '2 hours' ::INTERVAL
+                'message', 'Presença confirmada às ' || (SELECT date_part('hours', now()) || ':' || date_part('minutes', now())) ::TIME - '2 hours' ::INTERVAL
             );
         WHEN 2
         THEN
@@ -200,7 +200,7 @@ BEGIN
         THEN
             RETURN json_build_object(
                 'executionCode', 1,
-                'message', 'Saída confirmada às ' || (SELECT date_part('hours', now()) || ':' || date_part('minutes', now()) || date_part('seconds', now())) ::TIME - '2 hours' ::INTERVAL
+                'message', 'Saída confirmada às ' || (SELECT date_part('hours', now()) || ':' || date_part('minutes', now())) ::TIME - '2 hours' ::INTERVAL
             );
         WHEN 4
         THEN
@@ -255,3 +255,4 @@ END;
 $$
 LANGUAGE PLPGSQL;
 
+SELECT date_part('seconds', NOW());
