@@ -14,6 +14,13 @@ async function inserirPresenca(params) {
             json: true
         });
 
+        if(!dataAluno.length) {
+            throw {
+                message: 'Código de aluno incorreto ou inválido',
+                httpCode: 404
+            };
+        }
+
         dataAluno = dataAluno[0];
 
         params = {
