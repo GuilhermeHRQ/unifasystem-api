@@ -1,4 +1,10 @@
 process.env.TZ = 'America/Sao_Paulo';
+global.config = {
+    host: process.env.HOST || 'http://localhost',
+    port: process.env.PORT || 4200,
+    isProduction: process.env.isProduction || false
+};
+
 const consign = require('consign')({verbose: false});
 const express = require('express');
 const app = express();
@@ -10,13 +16,6 @@ require('./settings/db');
 require('./src/helpers/auth');
 require('./settings/environment');
 require('./src/helpers/schedule');
-
-
-global.config = {
-    host: process.env.HOST || 'http://localhost',
-    port: process.env.PORT || 4200,
-    isProduction: process.env.isProduction || false
-};
 
 app.use(body.json({limit: '10mb'}));
 app.use(body.urlencoded({extended: false}));

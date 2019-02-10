@@ -1,5 +1,5 @@
 const databaseConfig = {
-    'host': '18.188.151.183',
+    'host': '18.188.127.241',
     'port': 5432,
     'database': 'unifasystem',
     'user': 'postgres',
