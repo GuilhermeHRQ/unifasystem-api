@@ -135,7 +135,7 @@ BEGIN
     ELSE
         -- CASO SIM, VERIFICA SE ELE JÁ FEZ PASSOU O CARTÃO PARA SAIDA
         IF ((SELECT ((CURRENT_TIME ::TIME) - '2 hours' ::INTERVAL) - (SELECT horaEntrada
-                                     FROM TAlunoPresenca)) < ('5 minutes' :: INTERVAL)) IS TRUE
+                                     FROM TAlunoPresenca)) < ('1 minute' :: INTERVAL)) IS TRUE
         THEN
             vOcorrencia := 2;
         ELSE
@@ -194,7 +194,7 @@ BEGIN
         THEN
             RETURN json_build_object(
                 'executionCode', 3,
-                'message', 'Fazem menos de 5 minutos que você deu entrada nesta aula, por favor aguarde'
+                'message', 'Faz menos de 1 minuto que você deu entrada nesta aula, por favor aguarde'
             );
         WHEN 3
         THEN
@@ -256,3 +256,5 @@ $$
 LANGUAGE PLPGSQL;
 
 SELECT date_part('seconds', NOW());
+
+SELECT NOW() - '1 minutes' ::INTERVAL;

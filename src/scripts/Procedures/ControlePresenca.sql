@@ -217,7 +217,8 @@ BEGIN
                                         ap.horaSaida           "horaSaida",
                                         ap.presencas           "presencas"
                                  FROM Administracao.alunoPresenca ap
-                                 WHERE ap.idControlePresenca = pId) alunos) alunos
+                                 WHERE ap.idControlePresenca = pId
+                                 ORDER BY ap.nomeAluno) alunos) alunos
                    FROM Administracao.controlePresenca cp
                             INNER JOIN Administracao.status s ON (s.id = cp.idStatus)
                    WHERE cp.id = pId) result);
